@@ -1,0 +1,42 @@
+FORMAT: 1A
+HOST: http://api.site.com:3001/
+
+# Feasto
+
+Feasto API for mobile and web front-ends
+
+# Feasto API Root [/]
+
+This resource does not have any attributes. Instead it offers the initial
+API affordances in the form of the links in the JSON body.
+
+## Retrieve the Entry Point [GET]
+
++ Response 200 (application/json)
+
+        {
+        }
+
+
+## Group Users
+
+## Users Collection [/users]
+
+### Create [POST]
+
++ Request (application/json)
+
+        {
+            "email": "a@c.com",
+            "firstName": "John",
+            "lastName": "Smith"
+            "password": "pwd"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF3b25nQGVsbGVmc29udGVjaC5jb20iLCJpZCI6NCwiaWF0IjoxNDg5MDI2MjIwLCJleHAiOjE0ODkwMjYyMjV9.nEFVt5SDTr_oFQt2aOrWNc449MOzqIqAzU9531kJVg4"
+        }
+
+

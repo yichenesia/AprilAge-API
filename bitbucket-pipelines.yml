@@ -1,0 +1,85 @@
+# This is a sample build configuration for JavaScript.
+# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: atlassian/default-image:2
+
+pipelines:
+  branches:
+    aws-staging:
+       - step:
+           name: Build Deploy
+           deployment: staging
+           script:
+            - apt-get update
+            - apt-get install python3-pip -y
+            - apt-get install -y awscli
+            - export PATH=~/.local/bin:$PATH
+            - touch .env
+            - echo "API_ROOT=$API_ROOT" >> .env
+            - echo "API_DOMAIN=$API_DOMAIN" >> .env
+            - echo "API_MYSQL_HOST=$API_MYSQL_HOST" >> .env
+            - echo "API_MYSQL_PORT=$API_MYSQL_PORT" >> .env
+            - echo "API_MYSQL_USER=$API_MYSQL_USER" >> .env
+            - echo "API_MYSQL_PASSWORD=$API_MYSQL_PASSWORD" >> .env
+            - echo "API_MYSQL_DATABASE=$API_MYSQL_DATABASE" >> .env
+            - echo "API_SESSION_SECRET=$API_SESSION_SECRET" >> .env
+            - echo "API_CORS_ALLOW_ORIGIN=$API_CORS_ALLOW_ORIGIN" >> .env
+            - echo "API_JWT_EXPIRY=90m" >> .env
+            - echo "API_REFRESH_SESSION_SECRET=somerefreshsecret" >> .env
+            - echo "API_REFRESH_EXPIRY=7d" >> .env
+            - echo "API_REFRESH_REFRESH_JWT_ON_USE=0" >> .env
+            - cat .env
+            - npm install
+            - mkdir artifacts
+            - zip -r artifacts/lambda.zip . -x *.git* -x bitbucket-pipelines.yml -x db/\* -x documention/\* -x README.md
+            - cd db/create
+            - npm install
+            - zip -r ../../artifacts/CreateDB.zip .
+            - cd ../..
+            - pipe: atlassian/aws-s3-deploy:0.4.3
+              variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: 'us-east-1'
+                  S3_BUCKET: 'staging-bedrock-lambda'
+                  LOCAL_PATH: 'artifacts'
+                  ACL: 'public-read' 
+                  DELETE_FLAG: 'true' # Delete ay existing data
+            - aws lambda update-function-code --function-name "staging-bedrock-ollon-api-lambda-api"  --s3-key "lambda.zip"  --s3-bucket "staging-bedrock-lambda"  --region "us-east-1"
+            - aws lambda update-function-code --function-name "staging-bedrock-ollon-db-deploy-lambda-deploy"  --s3-key "CreateDB.zip"  --s3-bucket "staging-bedrock-lambda"  --region "us-east-1"
+    azure-staging:
+       - step:
+           name: Build Deploy
+           deployment: staging
+           script:
+            - apt-get update
+            - apt-get install python3-pip -y
+            - apt-get install -y awscli
+            - export PATH=~/.local/bin:$PATH
+            - npm install
+            - mkdir artifacts
+            - zip -r artifacts/bedrock.zip . -x *.git* -x bitbucket-pipelines.yml -x db/\* -x documention/\* -x README.md
+            - pipe: microsoft/azure-web-apps-deploy:1.0.0
+              variables:
+                AZURE_APP_ID: $AZURE_APP_ID
+                AZURE_PASSWORD: $AZURE_PASSWORD
+                AZURE_TENANT_ID: $AZURE_TENANT_ID
+                AZURE_RESOURCE_GROUP: 'OllonBedrock'
+                AZURE_APP_NAME: 'staging-bedrock-ollon-AppService'
+                ZIP_FILE: 'artifacts/bedrock.zip'
+  custom: 
+    database-deploy:
+      - step:
+          name: Database Deploy
+          script:
+           - apt-get update  
+           - apt-get install -y awscli
+           - aws lambda invoke --function-name "staging-bedrock-ollon-db-deploy-lambda-deploy" --region "us-east-1"  response.json 
+           - cat response.json
+
+
+
+
+

@@ -1,0 +1,15 @@
+{
+  "name": "staging-bedrock-ollon-db-deploy-lambda-db-deploy",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Create Database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "mysql": "^2.15.0"
+  }
+}

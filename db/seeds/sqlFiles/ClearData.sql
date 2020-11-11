@@ -1,0 +1,9 @@
+
+-- # DELETE Entries
+SET FOREIGN_KEY_CHECKS=0;
+
+DELETE FROM entries;
+DELETE FROM jwt_tokens;
+DELETE FROM users;
+
+SET FOREIGN_KEY_CHECKS=1;  
