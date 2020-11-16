@@ -9,6 +9,7 @@ import healthCheckRoutes from './healthCheck.routes.js';
 import userRoutes from './user.routes.js'; 
 import authRoutes from './auth.routes.js'; 
 import entryRoutes from './entry.routes.js'; 
+import resultsIdRoutes from './resultsid.routes.js';
 
 /**
  * the new Router exposed in express 4
@@ -26,6 +27,7 @@ healthCheckRoutes(router);
 authRoutes(router);
 userRoutes(router);
 entryRoutes(router);
+resultsIdRoutes(router); 
 
 export default {
   router

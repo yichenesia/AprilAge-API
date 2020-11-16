@@ -1,6 +1,6 @@
 'use strict'; 
 
-import {connectedToApi, connectedToDatabase} from '..models/documents.models.js';
+import {connectedToApi, connectedToDatabase} from '../models/resultsID.model.js';
 
 // /results/{resultsID}, specific results ID 
 // GET retrieves an aging result corresponding to the given id from /results
@@ -23,15 +23,27 @@ import {connectedToApi, connectedToDatabase} from '..models/documents.models.js'
 
 //Connect to april age db and retrieve result with the given ID
     export const getResult = async(req, res, next)=> {
-
+        try {
+            const connectedToApiResult = connectedToApi(); 
+            return res.json({connected: connectedToApiResult})
+        } catch(err) { next(err); }
     }
 
     //getResult and return it as a zip compressed file
     export const getResultZip = async(req, res, next)=> {
+        try {
+            const connectedToDatabaseResult = await connectedToDatabase();
+            return res.json({connected: connectedToDatabaseResult}); 
+        } catch(err) {
+            next(err); 
+        }
 
-    }
+    }; 
 
     //find result with ID resultID in the db and delete it
     export const deleteResult = async(req, res, next)=> {
-
+        try {
+            const connectedToApiResult = connectedToApi(); 
+            return res.json({connected: connectedToApiResult})
+        } catch(err) { next(err); }
     }

@@ -2,7 +2,7 @@
 
 import connectNoCache from 'connect-nocache';
 
-import * as users from '../controllers/resultsID.controller.js';
+import * as resultsID from '../controllers/resultsID.controller.js';
 import {passportAuth} from '../middleware/auth.middleware.js';
 
 const noCache = connectNoCache();
@@ -18,3 +18,5 @@ const routes = (router) => {
     .delete(resultsID.deleteResult)
 
 }
+
+export default routes; 
