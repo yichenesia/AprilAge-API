@@ -10,6 +10,7 @@ import userRoutes from './user.routes.js';
 import authRoutes from './auth.routes.js'; 
 import entryRoutes from './entry.routes.js'; 
 
+import emailRoutes from './email.routes.js';
 import documentRoutes from './documents.routes.js'; 
 
 /**
@@ -29,6 +30,7 @@ authRoutes(router);
 userRoutes(router);
 entryRoutes(router);
 
+emailRoutes(router);
 documentRoutes(router);
 
 export default {
