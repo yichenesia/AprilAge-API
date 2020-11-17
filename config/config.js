@@ -25,7 +25,7 @@ const config = {
   api: {
     name: 'APP'
   },
-  api_root_path: getEnv('API_ROOT'),
+  api_root_path: "/",
   root: rootPath,
   port: getEnv('API_SERVER_PORT'),
   database: {
