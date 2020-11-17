@@ -10,6 +10,8 @@ import userRoutes from './user.routes.js';
 import authRoutes from './auth.routes.js'; 
 import entryRoutes from './entry.routes.js'; 
 
+import imageRoutes from "./images.routes.js"; 
+
 /**
  * the new Router exposed in express 4
  * the indexRouter handles all requests to the `/` path
@@ -26,6 +28,9 @@ healthCheckRoutes(router);
 authRoutes(router);
 userRoutes(router);
 entryRoutes(router);
+
+
+imageRoutes(router);
 
 export default {
   router
