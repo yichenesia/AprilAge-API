@@ -11,6 +11,7 @@ import authRoutes from './auth.routes.js';
 import entryRoutes from './entry.routes.js'; 
 
 import imageRoutes from "./images.routes.js"; 
+import statusRoute from "./status.routes.js";
 
 /**
  * the new Router exposed in express 4
@@ -31,6 +32,7 @@ entryRoutes(router);
 
 
 imageRoutes(router);
+statusRoute(router);
 
 export default {
   router
