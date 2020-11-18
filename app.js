@@ -16,7 +16,6 @@ import  * as jwtService from './services/jwt.service.js';
 import  logger from './services/logger.service.js';
 import configPassport from './config/passport.js';
 
-
 const runApp = (app) => {
 
   morgan.token('api_timestamp', () => { return moment().format('DD MMM HH:mm:ss'); });

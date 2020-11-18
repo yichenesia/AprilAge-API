@@ -14,6 +14,9 @@ import resultsIdRoutes from './resultsid.routes.js';
 import emailRoutes from './email.routes.js';
 import documentRoutes from './documents.routes.js'; 
 
+import imageRoutes from "./images.routes.js"; 
+import statusRoute from "./status.routes.js";
+
 /**
  * the new Router exposed in express 4
  * the indexRouter handles all requests to the `/` path
@@ -34,6 +37,10 @@ docidRoutes(router);
 resultsIdRoutes(router); 
 emailRoutes(router);
 documentRoutes(router);
+
+
+imageRoutes(router);
+statusRoute(router);
 
 export default {
   router
