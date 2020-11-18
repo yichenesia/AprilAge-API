@@ -1,11 +1,11 @@
 export API_ROOT="/"
-export API_SERVER_PORT=3001
+export API_SERVER_PORT=3003
 export API_DOMAIN="http://localhost"
-export API_MYSQL_HOST=127.0.0.1
+export API_MYSQL_HOST="database-1.cu74z0ts7ehg.us-east-2.rds.amazonaws.com"
 export API_MYSQL_PORT=3306
-export API_MYSQL_USER="bedrock"
-export API_MYSQL_PASSWORD="bedrock"
-export API_MYSQL_DATABASE="bedrock_dev"
+export API_MYSQL_USER="admin"
+export API_MYSQL_PASSWORD="m4ster123"
+export API_MYSQL_DATABASE="database-1"
 export API_SESSION_SECRET="somesecret"
 export API_JWT_EXPIRY="90m"
 export API_REFRESH_SESSION_SECRET=="somesupersecret"
