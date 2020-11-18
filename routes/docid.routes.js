@@ -9,14 +9,8 @@ const routes = (router) => {
     .delete(docid.removeAgingDoc);
   router.route('/users/:email/documents/:docid/points')
     .get(docid.points);
-  // router.route('/users/:email/documents/:docid/featurePoints')
-  //   .put(docid.featurePoints);
-  // router.route('/users/:email/documents/:docid/match')
-  //   .post(docid.match);
   router.route('/users/:email/documents/:docid/aging')
     .post(docid.aging);
-  // router.route('/users/:email/documents/:docid/detectMatchAge')
-  //   .post(docid.detectMatchAge);
   router.route('/users/:email/documents/:docid/status')
     .get(docid.status);
 };
