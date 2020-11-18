@@ -9,6 +9,8 @@ config/config.js
 node_modules/
 dist/
 
+config/config.js
+
 # Compiled Java class files
 *.class
 
