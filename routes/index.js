@@ -9,6 +9,7 @@ import healthCheckRoutes from './healthCheck.routes.js';
 import userRoutes from './user.routes.js'; 
 import authRoutes from './auth.routes.js'; 
 import entryRoutes from './entry.routes.js'; 
+import resultRoutes from './results.routes.js';
 
 import docidRoutes from './docid.routes.js';
 import resultsIdRoutes from './resultsid.routes.js';
@@ -36,6 +37,7 @@ user2Routes(router);
 authRoutes(router);
 userRoutes(router);
 entryRoutes(router);
+resultRoutes(router);
 docidRoutes(router);
 resultsIdRoutes(router); 
 emailRoutes(router);
