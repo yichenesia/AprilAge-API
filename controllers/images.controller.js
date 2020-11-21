@@ -26,7 +26,7 @@ const uploadToS3 = (file) => {
 
   const params = {
     Bucket: BUCKET_NAME,
-    Key: path.basename(file.image),
+    Key: file.image.name,
     Body: fileStream,
     // ContentType: "multipart/form-data",
   };
@@ -35,7 +35,7 @@ const uploadToS3 = (file) => {
     if (err) {
       throw err;
     }
-    console.log("Image uploaded successfully to " + data.location);
+    console.log("Image uploaded successfully to s3");
   });
 };
 
