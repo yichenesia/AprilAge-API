@@ -1,5 +1,5 @@
 
-exports.up = function(knex) {
+exports.up = function(knex, Promise) {
     return knex.raw(`CREATE TABLE \`agedImage\` 
     (  
         \`id\` INT NOT NULL AUTO_INCREMENT,
@@ -15,6 +15,6 @@ exports.up = function(knex) {
 `); 
 };
 
-exports.down = function(knex) {
+exports.down = function(knex, Promise) {
     return knex.raw("DROP TABLE `agedImage`");
 };
