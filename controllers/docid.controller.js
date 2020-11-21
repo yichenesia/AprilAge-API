@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
 
 /*******************************************************************************
-GET /users/:email/documents/:docid
+GET /users/:email/documents/:docID
 *******************************************************************************/
 export const retrieveAgingDoc = async (req, res, next) => {
   try {
@@ -23,7 +23,7 @@ export const retrieveAgingDoc = async (req, res, next) => {
 };
 
 /*******************************************************************************
-DELETE /users/:email/documents/:docid
+DELETE /users/:email/documents/:docID
 *******************************************************************************/
 export const removeAgingDoc = async (req, res, next) => {
   try {
@@ -41,7 +41,7 @@ export const removeAgingDoc = async (req, res, next) => {
 
 
 /*******************************************************************************
-GET /users/:email/documents/:docid/points
+GET /users/:email/documents/:docID/points
 *******************************************************************************/
 export const points = async (req, res, next) => {
   try {
@@ -55,7 +55,7 @@ export const points = async (req, res, next) => {
 };
 
 /*******************************************************************************
-POST /users/:email/documents/:docid/aging
+POST /users/:email/documents/:docID/aging
 *******************************************************************************/
 export const aging = async (req, res, next) => {
   try {
@@ -70,7 +70,7 @@ export const aging = async (req, res, next) => {
 };
 
 /*******************************************************************************
-GET /users/:email/documents/:docid/status
+GET /users/:email/documents/:docID/status
 *******************************************************************************/
 export const status = async (req, res, next) => {
   try {
