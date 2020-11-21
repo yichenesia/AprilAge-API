@@ -13,7 +13,7 @@ VALUES
 -- Add Test Image
 INSERT INTO image (id, uri, created_at, updated_at)
 VALUES
-('1', 'kermit_happy.jpg', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
+('1', 'kermit_sad.jpg', '2020-11-21 20:20:14', '2020-11-21 20:20:14');
 
 -- Add Test Aging Document
 INSERT INTO agingDocument (id, userID, created_at, updated_at)
