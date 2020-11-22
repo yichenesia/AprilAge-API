@@ -109,7 +109,7 @@ async function getResultDoc(req) {
                 }
 
                 const success = await agingResult.deleteById(req.params.resultID); 
-                return success; 
+                res.send(success); 
         } 
     }
     catch(err) { next(err); }
