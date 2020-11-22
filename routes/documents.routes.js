@@ -9,7 +9,7 @@ const routes = (router) => {
   router.route('/users/:email/documents')
     .post(documents.createAgingDoc);
   
-  router.route('/users/:email/documents/results')
+  router.route('/users/:email/document/results')
     .get(documents.retrieveAgingResults);
 };
 

@@ -48,7 +48,7 @@ const User2 = {
   },
 
   create: (userObj, cn = db) => {
-    const fields = ['email', 'password'];
+    const fields = ['email', 'hashed_password'];
     const values = ['?', '?'];
     const userInsertSqlParams = [
       userObj.email,
