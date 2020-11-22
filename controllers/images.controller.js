@@ -1,5 +1,9 @@
 "use strict";
 
+import {
+  connectedToApi,
+  connectedToDatabase,
+} from "../models/healthCheck.model.js";
 import imageModel from "../models/images.model.js";
 import { createRequire } from "module";
 
@@ -44,13 +48,34 @@ POST /images
 export const uploadImageApi = async (req, res, next) => {
   const imageObj = {};
   try {
-    const form = formidable({ multiples: false });
-    form.parse(req, (err, fields, file) => {
-      uploadToS3(files); // upload the image to the s3 bucket
-      imageObj.uri = URI + file.image.name;
-      const image = imageModel.create(imageObj);
-      return res.json(imageObj);
-    });
+    const connectedToApiResult = connectedToApi();
+    const connectedToDatabaseResult = await connectedToDatabase();
+    if (connectedToApiResult && connectedToDatabaseResult) {
+      const form = formidable({ multiples: false });
+      form.parse(req, (err, fields, file) => {
+        uploadToS3(file); // upload the image to the s3 bucket
+        imageObj.uri = URI + file.image.name;
+        const image = imageModel.create(imageObj);
+        return res.json(imageObj);
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+/*******************************************************************************
+GET /images/:id
+*******************************************************************************/
+export const getImageApi = async (req, res, next) => {
+  try {
+    const connectedToApiResult = connectedToApi();
+    const connectedToDatabaseResult = await connectedToDatabase();
+
+    if (connectedToApiResult && connectedToDatabaseResult) {
+      const image = await imageModel.findById(req.params.id);
+      return res.json(image.uri);
+    }
   } catch (err) {
     next(err);
   }
