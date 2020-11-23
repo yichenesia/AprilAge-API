@@ -89,7 +89,7 @@ export const createAgingDoc = async (req, res, next) => {
 };
 
 /*******************************************************************************
-GET /users/:email/documents/results
+GET /users/:email/document/results
 *******************************************************************************/
 //TODO: Figure out regex check and use filter to properly query for results
 export const retrieveAgingResults = async (req, res, next) => {
