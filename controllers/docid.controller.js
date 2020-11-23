@@ -146,11 +146,36 @@ POST /users/:email/documents/:docID/aging
 *******************************************************************************/
 export const aging = async (req, res, next) => {
   try {
-    const connectedToDatabaseResult = await connectedToDatabase();
-    return res.json({ 
-      connected: connectedToDatabaseResult,
-      status: "Requested AprilAge API to age image."
-    });
+    const docID = req.params.docID;
+    const email = req.params.email;
+    const agingDoc = await agingDocModel.findById(docID);
+    const user = await userModel.findByEmail(email);
+
+    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
+      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+
+    var found = false;
+
+    for (var k in result) {
+      if (result[k].id == docID) {
+        found = true;
+        break
+      }
+    }
+
+    if (agingDoc == undefined) {
+        res.status(404).send("Error 404: Aging Document not found.")
+    }
+    else if (!found){
+        res.status(403).send("Error 403: Document does not belong to user.")
+    }
+    else {
+      console.log("Aging request successfuly sent to AprilAge")
+      console.log(req.body) // You send an Aging Request Representation in JSON (sequence types) to AprilAge
+      return res.status(202).end();
+    }
   } catch(err) {
     next(err);
   }
