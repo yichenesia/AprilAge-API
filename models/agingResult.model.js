@@ -16,6 +16,18 @@ const AgingResult = {
       return(objectToCamelCase(sqlResults[0][0]));
     });
   },
+  
+  findByDOCId: (id, cn = db) => {
+    if ((!id) || (id.length === 0)) {
+      return Promise.reject(new Error('findById() No id specified!'));
+    }
+
+    const sql = 'SELECT agingResult.* FROM agingResult WHERE id = ? and id = agingResult.agingDocument';
+
+    return cn.raw(sql, [id]).then((sqlResults) => {
+      return(objectToCamelCase(sqlResults[0][0]));
+    });
+  },
 
   deleteById: (id, cn = db) => {
     if ((!id) || (id.length === 0)) {
