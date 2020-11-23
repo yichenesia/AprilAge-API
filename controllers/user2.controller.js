@@ -47,8 +47,8 @@ export const create_user = async (req, res, next) => {
     const first_name = req.query.first_name;
     const last_name = req.query.last_name;
     //const salt = req.query.salt;
-    //const hashed_password = req.query.hashed_password;
-    const userObj ={email, first_name, last_name};
+    const hashed_password = req.query.hashed_password;
+    const userObj ={email, first_name, last_name, hashed_password};
     //TODO: Add more inputs later
     //TODO: Create entry in db
 
@@ -77,9 +77,6 @@ export const user_info = async (req, res, next) => {
             const user = await userModel.findByEmail(email);
       
             return res.json({ 
-                connectedToAPI: connectedToApiResult , 
-                connectedToDB: connectedToDatabaseResult,
-                email: email,
                 user: user
             });
           }
