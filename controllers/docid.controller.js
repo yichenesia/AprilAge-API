@@ -1,6 +1,4 @@
 'use strict';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
 
 import db from '../services/db.js';
@@ -8,37 +6,6 @@ import _ from 'lodash';
 import { objectToCamelCase } from '../models/base.model.js';
 import userModel from '../models/user2.model.js'
 import agingDocModel from '../models/agingDocument.model.js';
-
-// const checkUserDoc = async (docID, email) => {
-//   const user = await userModel.findByEmail(email);
-
-//   const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
-//     const result = await db.raw(sql, [user.id]).then((sqlResults) => {
-//       return(objectToCamelCase(sqlResults[0]));
-//     });
-  
-//   console.log(email);
-  
-//   return foundDoc(result, docID);
-  
-// }
-
-// const foundDoc = async (result, docID) => {
-//   var found = false;
-
-//   console.log(docID);
-//   console.log(result);
-
-//   for (var k in result) {
-//     if (result[k].id == docID) {
-//       var found = true;
-//       break
-//     }
-//   }
-
-//   return found;
-
-// }
 
 /*******************************************************************************
 GET /users/:email/documents/:docID
@@ -125,9 +92,49 @@ GET /users/:email/documents/:docID/points
 *******************************************************************************/
 export const points = async (req, res, next) => {
   try {
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    const path = 'test.jpg';
-    res.sendFile(path, {root: __dirname});
+    const docID = req.params.docID;
+    const email = req.params.email;
+    const agingDoc = await agingDocModel.findById(docID);
+    const user = await userModel.findByEmail(email);
+
+    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
+      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+
+    var found = false;
+
+    for (var k in result) {
+      if (result[k].id == docID) {
+        found = true;
+        break
+      }
+    }
+
+    const sqlImg = 'SELECT agedImage.uri FROM agingDocument, agingResult, agedImage WHERE agingDocument.userID = ? AND agingDocument.id = ? AND agingResult.agingDocument = agingDocument.id AND agingResult.id = agedImage.resultID';
+      const resultImg = await db.raw(sqlImg, [user.id, docID]).then((sqlResults) =>  {
+        return(objectToCamelCase(sqlResults[0]));
+    });
+
+    if (agingDoc == undefined) {
+      res.status(404).send("Error 404: Aging Document not found.")
+    }
+    else if (!found){
+      res.status(403).send("Error 403: Document does not belong to user.")
+    }
+    else if (Object.keys(resultImg).length == 0) {
+      res.status(307).end();
+    }
+    else {
+      const imgUrl = resultImg['0'].uri;
+
+      res.json({
+        "uri": imgUrl,
+        "age": agingDoc.age
+      })
+      // res.send("<img src = "+imgUrl+">");
+    }
+    
   } 
   catch(err) {
     next(err);
