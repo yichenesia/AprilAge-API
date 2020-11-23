@@ -9,6 +9,37 @@ import { objectToCamelCase } from '../models/base.model.js';
 import userModel from '../models/user2.model.js'
 import agingDocModel from '../models/agingDocument.model.js';
 
+// const checkUserDoc = async (docID, email) => {
+//   const user = await userModel.findByEmail(email);
+
+//   const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
+//     const result = await db.raw(sql, [user.id]).then((sqlResults) => {
+//       return(objectToCamelCase(sqlResults[0]));
+//     });
+  
+//   console.log(email);
+  
+//   return foundDoc(result, docID);
+  
+// }
+
+// const foundDoc = async (result, docID) => {
+//   var found = false;
+
+//   console.log(docID);
+//   console.log(result);
+
+//   for (var k in result) {
+//     if (result[k].id == docID) {
+//       var found = true;
+//       break
+//     }
+//   }
+
+//   return found;
+
+// }
+
 /*******************************************************************************
 GET /users/:email/documents/:docID
 *******************************************************************************/
@@ -54,13 +85,35 @@ DELETE /users/:email/documents/:docID
 *******************************************************************************/
 export const removeAgingDoc = async (req, res, next) => {
   try {
-    const connectedToDatabaseResult = await connectedToDatabase();
+    const docID = req.params.docID;
+    const email = req.params.email;
+    const agingDoc = await agingDocModel.findById(docID);
+    const user = await userModel.findByEmail(email);
 
-    return res.json({ 
-      connected: connectedToDatabaseResult,
-      deletionStatus: true,
-      status: 'Deleted aging doc.'
-    });
+    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
+      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+
+    var found = false;
+
+    for (var k in result) {
+      if (result[k].id == docID) {
+        found = true;
+        break
+      }
+    }
+
+    if (agingDoc == undefined) {
+      res.status(404).send("Error 404: Aging Document not found.")
+    }
+    else if (!found){
+      res.status(403).send("Error 403: Document does not belong to user.")
+    }
+    else {
+      await agingDocModel.deleteById(docID);
+      res.status(200).end();
+  }
   } catch(err) {
     next(err);
   }
