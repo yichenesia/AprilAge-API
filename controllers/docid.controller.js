@@ -1,5 +1,4 @@
 'use strict';
-import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
 
 import db from '../services/db.js';
 import _ from 'lodash';
