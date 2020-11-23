@@ -1,6 +1,14 @@
 'use strict'; 
 
-import {connectedToApi, connectedToDatabase} from '../models/resultsID.model.js';
+import {connectedToApi, connectedToDatabase} from "../models/healthCheck.model.js"
+import agingResult from "../models/agingResult.model.js"; 
+import agingDocument from "../models/agingDocument.model.js";
+import user from "../models/user2.model.js"; 
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const admZip = require('adm-zip')
+
 
 // /results/{resultsID}, specific results ID 
 // GET retrieves an aging result corresponding to the given id from /results
@@ -21,29 +29,88 @@ import {connectedToApi, connectedToDatabase} from '../models/resultsID.model.js'
     //else, status 200, no content to return 
 
 
+async function checkConnection() {
+    const connectedToApiResult = connectedToApi(); 
+    const connectedToDatabaseResult = await connectedToDatabase(); 
+    return connectedToApiResult && connectedToDatabaseResult; 
+}
+
+
+async function getResultDoc(req) {
+    if (checkConnection) {
+        const result = await agingResult.findById(req.params.resultID);
+        const realDocID = result.agingDocument;   
+
+        if (realDocID != req.params.docID) {
+            return "ERROR: Requested docID does not match requested resultID"; 
+        }
+        const agingDoc = await agingDocument.findById(realDocID);
+        const foundUser = await user.findById(agingDoc.userId)
+
+        if (foundUser.email != req.params.email) {
+            return "ERROR: requested result does not belong to user with given email"; 
+        }
+        return result 
+
+}
+}
+
 //Connect to april age db and retrieve result with the given ID
     export const getResult = async(req, res, next)=> {
         try {
-            const connectedToApiResult = connectedToApi(); 
-            return res.json({connected: connectedToApiResult})
+
+            const result = await getResultDoc(req)
+            if (req.params.resultID.includes(".zip")) {
+                
+                var zip = new admZip();
+                zip.addFile("results.json", new Buffer(JSON.stringify(result)));
+                var zipResult = zip.toBuffer(); 
+                res.setHeader("Content-Type", "application/zip");
+                return res.send(zipResult) 
+            }
+
+            else {
+                res.setHeader("Content-Type", "application/json");
+                return res.send(result) 
+            }            
+            
+
         } catch(err) { next(err); }
     }
 
     //getResult and return it as a zip compressed file
     export const getResultZip = async(req, res, next)=> {
-        try {
-            const connectedToDatabaseResult = await connectedToDatabase();
-            return res.json({connected: connectedToDatabaseResult}); 
-        } catch(err) {
-            next(err); 
-        }
 
+        try {
+            const result = await getResultDoc(req)
+            const zip = new JSZip(result, {base64: false, checkCRC32: true});
+            res.setHeader("Content-Type", "application/zip");
+            console.log("ZIP", zip)
+            res.send(zip)
+        }
+        catch(err) {next(err); }
     }; 
 
     //find result with ID resultID in the db and delete it
     export const deleteResult = async(req, res, next)=> {
         try {
-            const connectedToApiResult = connectedToApi(); 
-            return res.json({connected: connectedToApiResult})
-        } catch(err) { next(err); }
+            if (checkConnection) {
+                const result = await agingResult.findById(req.params.resultID);
+                const realDocID = result.agingDocument;   
+        
+                if (realDocID != req.params.docID) {
+                    return "ERROR: Requested docID does not match requested resultID"; 
+                }
+                const agingDoc = await agingDocument.findById(realDocID);
+                const foundUser = await user.findById(agingDoc.userId)
+        
+                if (foundUser.email != req.params.email) {
+                    return "ERROR: requested result does not belong to user with given email"; 
+                }
+
+                const success = await agingResult.deleteById(req.params.resultID); 
+                res.send(success); 
+        } 
+    }
+    catch(err) { next(err); }
     }

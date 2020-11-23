@@ -11,8 +11,8 @@ const routes = (router) => {
     router.route('/users/:email/documents/:docID/results/:resultID')
     .get(resultsID.getResult);
 
-    router.route('/users/:email/documents/:docID/results/:resultID.zip')
-    .get(resultsID.getResultZip);
+    // router.route('/users/:email/documents/:docID/results/:resultID.zip')
+    // .get(resultsID.getResultZip);
 
     router.route('/users/:email/documents/:docID/results/:resultID')
     .delete(resultsID.deleteResult)
