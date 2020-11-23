@@ -22,7 +22,7 @@ const User2 = {
       return Promise.reject(new Error('findUserByEmail() No email specified!'));
     }
 
-    const sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
+    const sql = 'SELECT users.* FROM users WHERE email = ? LIMIT 1';
 
     return cn.raw(sql, [email]).then((sqlResults) => {
       return(objectToCamelCase(sqlResults[0][0]));
@@ -48,11 +48,15 @@ const User2 = {
   },
 
   create: (userObj, cn = db) => {
-    const fields = ['email', 'password'];
-    const values = ['?', '?'];
+    const fields = ['email', 'first_name', 'last_name', 'hashed_password'];
+    const values = ['?', '?', '?', '?'];
     const userInsertSqlParams = [
+      //userObj.role,
       userObj.email,
-      userObj.password
+      userObj.first_name,
+      userObj.last_name,
+      //userObj.salt,
+      userObj.hashed_password
     ];
 
     const userInsertSql = 'INSERT INTO users (' + fields + ') VALUES(' + values + ')';
