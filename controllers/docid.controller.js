@@ -8,6 +8,20 @@ import agingDocModel from '../models/agingDocument.model.js';
 
 /*******************************************************************************
 GET /users/:email/documents/:docID
+
+Testing:
+
+email: user@kermitism.com
+docid: 48489375949
+result: Error 404
+
+email: admin@example.com
+docid: 2
+result: Error 403
+
+email: user@kermitism.com
+docid: 2
+result: JSON aging doc
 *******************************************************************************/
 export const retrieveAgingDoc = async (req, res, next) => {
   try {
@@ -48,6 +62,14 @@ export const retrieveAgingDoc = async (req, res, next) => {
 
 /*******************************************************************************
 DELETE /users/:email/documents/:docID
+
+email: user@kermitism.com
+docid: 48489375949
+result: Error 404
+
+email: admin@example.com
+docid: 2
+result: Error 403
 *******************************************************************************/
 export const removeAgingDoc = async (req, res, next) => {
   try {
@@ -88,6 +110,13 @@ export const removeAgingDoc = async (req, res, next) => {
 
 /*******************************************************************************
 GET /users/:email/documents/:docID/points
+
+email: admin@example.com
+docid: 1
+result: {
+  uri: kermit meme
+  age: 69
+}
 *******************************************************************************/
 export const points = async (req, res, next) => {
   try {
@@ -142,6 +171,20 @@ export const points = async (req, res, next) => {
 
 /*******************************************************************************
 POST /users/:email/documents/:docID/aging
+
+Testing: 
+
+Send in Postman under the "Body" section
+{
+    "sequenceType": "Max72",
+    "sequences": [{
+        "smoking": 0,
+        "sunExposure": 0,
+        "multiplier": 1
+    }]
+}
+
+This is the "Aging Request Representation" that this method needs
 *******************************************************************************/
 export const aging = async (req, res, next) => {
   try {
@@ -182,6 +225,12 @@ export const aging = async (req, res, next) => {
 
 /*******************************************************************************
 GET /users/:email/documents/:docID/status
+
+email: admin@example.com
+docid: 1
+result: {
+    "status": "uploaded"
+}
 *******************************************************************************/
 export const status = async (req, res, next) => {
   try {
