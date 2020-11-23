@@ -1,4 +1,3 @@
-# Testing push access
 # Ollon Bedrock2020
 A starter API using Nodejs with mysql.
 
