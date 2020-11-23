@@ -186,11 +186,34 @@ GET /users/:email/documents/:docID/status
 *******************************************************************************/
 export const status = async (req, res, next) => {
   try {
-    const connectedToDatabaseResult = await connectedToDatabase();
-    return res.json({ 
-      connected: connectedToDatabaseResult,
-      status: "Returns the status of an aging document"
-    });
+    const docID = req.params.docID;
+    const email = req.params.email;
+    const agingDoc = await agingDocModel.findById(docID);
+    const user = await userModel.findByEmail(email);
+
+    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
+      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+
+    var found = false;
+
+    for (var k in result) {
+      if (result[k].id == docID) {
+        found = true;
+        break
+      }
+    }
+
+    if (agingDoc == undefined) {
+        res.status(404).send("Error 404: Aging Document not found.")
+    }
+    else if (!found){
+        res.status(403).send("Error 403: Document does not belong to user.")
+    }
+    else {
+      return res.status(200).json({"status": agingDoc.status});
+    }
   } catch(err) {
     next(err);
   }
