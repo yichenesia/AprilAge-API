@@ -16,7 +16,7 @@ var path = require("path");
 const BUCKET_NAME = "uoft-terraform.ollon.ca";
 const ID = "AKIA2SRCFREAA3RGGDTC";
 const SECRET = "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";
-const URI = "https://s3.us-east-2.amazonaws.com/" + BUCKET_NAME + "/";
+const URI = "s3://" + BUCKET_NAME + "/";
 
 const s3 = new AWS.S3({
   accessKeyId: ID,
