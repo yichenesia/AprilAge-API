@@ -5,28 +5,10 @@ import agingResult from "../models/agingResult.model.js";
 import agingDocument from "../models/agingDocument.model.js";
 import user from "../models/user2.model.js"; 
 import { createRequire } from "module";
+//import { response } from "express";
 
 const require = createRequire(import.meta.url);
 const admZip = require('adm-zip')
-
-
-// /results/{resultsID}, specific results ID 
-// GET retrieves an aging result corresponding to the given id from /results
-    // If the resultsID given does not belong to the logged in user, ERROR 403
-    // If no aging result found, ERROR 404 
-    // Else, status 200, content-type = application/json as Aging Result Representation 
-// GET results/{resultsID}.zip, retrieves aged images as zip file from /results
-    //Guest, User and Admin are allowed to access this
-    //Error 401 if user is not authorized to access
-    //Error 403 is aging result does not belong to the user
-    //Error 404 if aging result is not found
-    //else, status 200, application/zip
-// DELETE remvoes an aging result at /results/{resultsID}
-     //Guest, User and Admin are allowed to access this
-    //Error 401 if user is not authorized to access
-    //Error 403 is aging result does not belong to the user
-    //Error 404 if aging result is not found
-    //else, status 200, no content to return 
 
 
 async function checkConnection() {
@@ -39,16 +21,21 @@ async function checkConnection() {
 async function getResultDoc(req) {
     if (checkConnection) {
         const result = await agingResult.findById(req.params.resultID);
+
+        if (result == undefined) {
+            return 404
+        }
+
         const realDocID = result.agingDocument;   
 
         if (realDocID != req.params.docID) {
-            return "ERROR: Requested docID does not match requested resultID"; 
+            return 405; 
         }
         const agingDoc = await agingDocument.findById(realDocID);
         const foundUser = await user.findById(agingDoc.userId)
 
         if (foundUser.email != req.params.email) {
-            return "ERROR: requested result does not belong to user with given email"; 
+            return 406; 
         }
         return result 
 
@@ -60,6 +47,20 @@ async function getResultDoc(req) {
         try {
 
             const result = await getResultDoc(req)
+
+            if (result == 404) {
+                return res.send("Error, result not found")
+            }
+
+            else if (result == 405) {
+                return res.send("ERROR: Requested docID does not match requested resultID"); 
+            }
+
+            else if (result == 406) {
+                return res.send("ERROR: requested result does not belong to user with given email"); 
+            }
+ 
+            //for /results/resultID.zip
             if (req.params.resultID.includes(".zip")) {
                 
                 var zip = new admZip();
@@ -74,42 +75,37 @@ async function getResultDoc(req) {
                 return res.send(result) 
             }            
             
-
         } catch(err) { next(err); }
-    }
-
-    //getResult and return it as a zip compressed file
-    export const getResultZip = async(req, res, next)=> {
-
-        try {
-            const result = await getResultDoc(req)
-            const zip = new JSZip(result, {base64: false, checkCRC32: true});
-            res.setHeader("Content-Type", "application/zip");
-            console.log("ZIP", zip)
-            res.send(zip)
-        }
-        catch(err) {next(err); }
-    }; 
+    } 
 
     //find result with ID resultID in the db and delete it
     export const deleteResult = async(req, res, next)=> {
         try {
             if (checkConnection) {
                 const result = await agingResult.findById(req.params.resultID);
+
+                if (result == undefined) {
+                    return res.send("Error, result does not exist."); 
+                }
+
                 const realDocID = result.agingDocument;   
         
                 if (realDocID != req.params.docID) {
-                    return "ERROR: Requested docID does not match requested resultID"; 
+                    return res.send("ERROR: Requested docID does not match requested resultID"); 
                 }
                 const agingDoc = await agingDocument.findById(realDocID);
                 const foundUser = await user.findById(agingDoc.userId)
         
                 if (foundUser.email != req.params.email) {
-                    return "ERROR: requested result does not belong to user with given email"; 
+                    return res.send("ERROR: requested result does not belong to user with given email"); 
                 }
 
                 const success = await agingResult.deleteById(req.params.resultID); 
-                res.send(success); 
+                if (typeof success === "Promise") {
+                    return res.send(success); 
+                }
+                else {return res.send("Successfully deleted result")}
+                
         } 
     }
     catch(err) { next(err); }
