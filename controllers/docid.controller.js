@@ -23,12 +23,8 @@ email: user@kermitism.com
 docid: 2
 result: JSON aging doc
 *******************************************************************************/
-export const retrieveAgingDoc = async (req, res, next) => {
-  try {
 
-    const docID = req.params.docID;
-    const email = req.params.email;
-    const agingDoc = await agingDocModel.findById(docID);
+export const checkDB = async (docID, email) => {
     const user = await userModel.findByEmail(email);
 
     const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
@@ -44,6 +40,20 @@ export const retrieveAgingDoc = async (req, res, next) => {
         break
       }
     }
+
+    return {"foundStatus": found, "user": user};
+
+}
+
+
+export const retrieveAgingDoc = async (req, res, next) => {
+  try {
+
+    const docID = req.params.docID;
+    const email = req.params.email;
+    const agingDoc = await agingDocModel.findById(docID);
+    const response = await checkDB(docID, email);
+    const found = response["foundStatus"];
 
     if (agingDoc == undefined) {
         res.status(404).send("Error 404: Aging Document not found.")
@@ -76,21 +86,8 @@ export const removeAgingDoc = async (req, res, next) => {
     const docID = req.params.docID;
     const email = req.params.email;
     const agingDoc = await agingDocModel.findById(docID);
-    const user = await userModel.findByEmail(email);
-
-    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
-      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
-        return(objectToCamelCase(sqlResults[0]));
-      });
-
-    var found = false;
-
-    for (var k in result) {
-      if (result[k].id == docID) {
-        found = true;
-        break
-      }
-    }
+    const response = await checkDB(docID, email);
+    const found = response["foundStatus"];
 
     if (agingDoc == undefined) {
       res.status(404).send("Error 404: Aging Document not found.")
@@ -122,22 +119,10 @@ export const points = async (req, res, next) => {
   try {
     const docID = req.params.docID;
     const email = req.params.email;
+    const response = await checkDB(docID, email);
+    const found = response["foundStatus"];
+    const user = response["user"];
     const agingDoc = await agingDocModel.findById(docID);
-    const user = await userModel.findByEmail(email);
-
-    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
-      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
-        return(objectToCamelCase(sqlResults[0]));
-      });
-
-    var found = false;
-
-    for (var k in result) {
-      if (result[k].id == docID) {
-        found = true;
-        break
-      }
-    }
 
     const sqlImg = 'SELECT agedImage.uri FROM agingDocument, agingResult, agedImage WHERE agingDocument.userID = ? AND agingDocument.id = ? AND agingResult.agingDocument = agingDocument.id AND agingResult.id = agedImage.resultID';
       const resultImg = await db.raw(sqlImg, [user.id, docID]).then((sqlResults) =>  {
@@ -190,22 +175,9 @@ export const aging = async (req, res, next) => {
   try {
     const docID = req.params.docID;
     const email = req.params.email;
+    const response = await checkDB(docID, email);
+    const found = response["foundStatus"];
     const agingDoc = await agingDocModel.findById(docID);
-    const user = await userModel.findByEmail(email);
-
-    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
-      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
-        return(objectToCamelCase(sqlResults[0]));
-      });
-
-    var found = false;
-
-    for (var k in result) {
-      if (result[k].id == docID) {
-        found = true;
-        break
-      }
-    }
 
     if (agingDoc == undefined) {
         res.status(404).send("Error 404: Aging Document not found.")
@@ -236,22 +208,9 @@ export const status = async (req, res, next) => {
   try {
     const docID = req.params.docID;
     const email = req.params.email;
+    const response = await checkDB(docID, email);
+    const found = response["foundStatus"];
     const agingDoc = await agingDocModel.findById(docID);
-    const user = await userModel.findByEmail(email);
-
-    const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userID = ?';
-      const result = await db.raw(sql, [user.id]).then((sqlResults) => {
-        return(objectToCamelCase(sqlResults[0]));
-      });
-
-    var found = false;
-
-    for (var k in result) {
-      if (result[k].id == docID) {
-        found = true;
-        break
-      }
-    }
 
     if (agingDoc == undefined) {
         res.status(404).send("Error 404: Aging Document not found.")
