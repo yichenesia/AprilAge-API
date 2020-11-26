@@ -15,8 +15,8 @@ export const retrieveAgingDocs = async (req, res, next) => {
   const email = req.params.email;
   const user = await userModel.findByEmail(email);
   if (!user) {
-    res.status(401);
-    res.send('Unauthorized user');
+    res.status(404);
+    res.send('User not found');
     return;
   }
   try {
@@ -80,8 +80,8 @@ export const createAgingDoc = async (req, res, next) => {
     const email = req.params.email;
     const user = await userModel.findByEmail(email);
     if (!user) {
-      res.status(401);
-      res.send('Unauthorized user');
+      res.status(404);
+      res.send('User not found');
       return;
     }
     // New Document Request Representation
@@ -212,8 +212,8 @@ export const retrieveAgingResults = async (req, res, next) => {
     const email = req.params.email;
     const user = await userModel.findByEmail(email);
     if (!user) {
-      res.status(401);
-      res.send('Unauthorized user');
+      res.status(404);
+      res.send('User not found');
       return;
     }
     // const pageNumber = req.body.pageNumber; // pagination not supported (11/25/20)
