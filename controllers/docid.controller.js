@@ -6,23 +6,7 @@ import { objectToCamelCase } from '../models/base.model.js';
 import userModel from '../models/user2.model.js'
 import agingDocModel from '../models/agingDocument.model.js';
 
-/*******************************************************************************
-GET /users/:email/documents/:docID
 
-Testing:
-
-email: user@kermitism.com
-docid: 48489375949
-result: Error 404
-
-email: admin@example.com
-docid: 2
-result: Error 403
-
-email: user@kermitism.com
-docid: 2
-result: JSON aging doc
-*******************************************************************************/
 
 export const checkDB = async (docID, email) => {
     const user = await userModel.findByEmail(email);
@@ -45,7 +29,23 @@ export const checkDB = async (docID, email) => {
 
 }
 
+/*******************************************************************************
+GET /users/:email/documents/:docID
 
+Testing:
+
+email: user@kermitism.com
+docid: 48489375949
+result: Error 404
+
+email: admin@example.com
+docid: 2
+result: Error 403
+
+email: user@kermitism.com
+docid: 2
+result: JSON aging doc
+*******************************************************************************/
 export const retrieveAgingDoc = async (req, res, next) => {
   try {
 
