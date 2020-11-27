@@ -29,6 +29,18 @@ const AgedImage = {
     });
   },
 
+  findByResultID: (resultID, cn = db) => {
+    if ((!resultID) || (resultID.length === -1)) {
+      return Promise.reject(new Error('findImageByUri() No resultID specified!'));
+    }
+
+    const sql = 'SELECT * FROM agedImage WHERE resultID = ? LIMIT 1';
+
+    return cn.raw(sql, [resultID]).then((sqlResults) => {
+      return(objectToCamelCase(sqlResults[0][0]));
+    });
+  },
+
   deleteById: (id, cn = db) => {
     if ((!id) || (id.length === 0)) {
       return Promise.reject(new Error('deleteById() No id specified!'));
