@@ -39,7 +39,7 @@ const AgingDocument = {
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.status);
     }
-    if ((agingDocObj.isSample) && (agingDocObj.isSample.length > 0)) {
+    if (agingDocObj.isSample == 0 || agingDocObj.isSample == 1) {
         fields.push('isSample');
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.isSample);
@@ -54,7 +54,7 @@ const AgingDocument = {
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.name);
     }
-    if ((agingDocObj.age) && (agingDocObj.age.length > 0)) {
+    if (agingDocObj.age > 0) {
         fields.push('age');
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.age);
@@ -64,12 +64,12 @@ const AgingDocument = {
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.ethnicity);
     }
-    if ((agingDocObj.height) && (agingDocObj.height.length > 0)) {
+    if (agingDocObj.height > 0) {
         fields.push('height');
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.height);
     }
-    if ((agingDocObj.weight) && (agingDocObj.weight.length > 0)) {
+    if (agingDocObj.weight > 0) {
         fields.push('weight');
         values.push('?');
         agingDocInsertSqlParams.push(agingDocObj.weight);
