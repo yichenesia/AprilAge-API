@@ -49,17 +49,14 @@ async function getResultDoc(req) {
             const result = await getResultDoc(req)
 
             if (result == 404) {
-                res.status(404); 
                 return res.send("Error, result not found")
             }
 
             else if (result == 405) {
-                res.status(400); 
                 return res.send("ERROR: Requested docID does not match requested resultID"); 
             }
 
             else if (result == 406) {
-                res.status(400);
                 return res.send("ERROR: requested result does not belong to user with given email"); 
             }
  
@@ -70,12 +67,10 @@ async function getResultDoc(req) {
                 zip.addFile("results.json", new Buffer(JSON.stringify(result)));
                 var zipResult = zip.toBuffer(); 
                 res.setHeader("Content-Type", "application/zip");
-                res.status(200); 
                 return res.send(zipResult) 
             }
 
             else {
-                res.status(200); 
                 res.setHeader("Content-Type", "application/json");
                 return res.send(result) 
             }            
@@ -90,27 +85,23 @@ async function getResultDoc(req) {
                 const result = await agingResult.findById(req.params.resultID);
 
                 if (result == undefined) {
-                    res.status(404); 
                     return res.send("Error, result does not exist."); 
                 }
 
                 const realDocID = result.agingDocument;   
         
                 if (realDocID != req.params.docID) {
-                    res.status(400)
                     return res.send("ERROR: Requested docID does not match requested resultID"); 
                 }
                 const agingDoc = await agingDocument.findById(realDocID);
                 const foundUser = await user.findById(agingDoc.userId)
         
                 if (foundUser.email != req.params.email) {
-                    res.status(400)
                     return res.send("ERROR: requested result does not belong to user with given email"); 
                 }
 
                 const success = await agingResult.deleteById(req.params.resultID); 
                 if (typeof success === "Promise") {
-                    res.send(404)
                     return res.send(success); 
                 }
                 else {return res.send("Successfully deleted result")}
