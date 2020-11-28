@@ -14,15 +14,11 @@ const fs = require("fs");
 
 var path = require("path");
 
+AWS.config.update({ region: "us-east-2" });
 const BUCKET_NAME = "uoft-terraform.ollon.ca";
-const ID = "AKIA2SRCFREAA3RGGDTC";
-const SECRET = "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";
-const URI = "s3://" + BUCKET_NAME + "/";
+const URI = "https://s3.us-east-2.amazonaws.com/" + BUCKET_NAME + "/";
 
-const s3 = new AWS.S3({
-  accessKeyId: ID,
-  secretAccessKey: SECRET,
-});
+const s3 = new AWS.S3();
 
 const uploadToS3 = (file) => {
   var fileStream = fs.createReadStream(file.image.path);

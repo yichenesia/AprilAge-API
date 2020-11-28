@@ -6,6 +6,8 @@ export API_MYSQL_PORT=3306
 export API_MYSQL_USER="admin"
 export API_MYSQL_PASSWORD="m4ster123"
 export API_MYSQL_DATABASE="database-1"
+export AWS_ACCESS_KEY_ID="AKIA2SRCFREAA3RGGDTC"
+export AWS_SECRET_ACCESS_KEY="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"
 export API_SESSION_SECRET="somesecret"
 export API_JWT_EXPIRY="90m"
 export API_REFRESH_SESSION_SECRET=="somesupersecret"
