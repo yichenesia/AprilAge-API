@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
     return knex.raw(`CREATE TABLE \`agingResult\` 
     (  
         \`id\` INT NOT NULL AUTO_INCREMENT, 
-        \`sequenceType\` VARCHAR(5),
+        \`sequenceType\` VARCHAR(5) CHECK (sequenceType = 'Max72' OR sequenceType = 'Rel40') NOT NULL,
 	    \`sequenceID\` INT,
 	    \`agingDocument\` INT,
         \`created_at\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,

@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
       (  
           \`id\` INT NOT NULL AUTO_INCREMENT, 
           \`role\` VARCHAR(25) NULL,
-          \`email\` VARCHAR(255) NULL,
+          \`email\` VARCHAR(255) NOT NULL UNIQUE,
           \`first_name\` VARCHAR(255) NULL,
           \`last_name\` VARCHAR(255) NULL,
           \`salt\` VARCHAR(255) NULL,
