@@ -224,7 +224,6 @@ export const aging = async (req, res, next) => {
 
       for (var item in sequences) {
         var newSeq = {'smoking': sequences[item]["smoking"].toString(), 'sunExposure': sequences[item]["sunExposure"].toString(), 'bmi': sequences[item]["bmi"].toString(), 'bmiFunc': sequences[item]["bmiFunc"].toString(), 'multiplier': sequences[item]["multiplier"].toString()}
-        console.log(newSeq);
         const _ = await agingSeqModel.create(newSeq)
       }
       
