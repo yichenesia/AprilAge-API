@@ -6,7 +6,10 @@ import { objectToCamelCase } from '../models/base.model.js';
 import userModel from '../models/user2.model.js'
 import agingDocModel from '../models/agingDocument.model.js';
 import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
+import agingSeqModel from '../models/agingSequence.model.js'
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 
 export const checkDBForMatch = async (docID, email) => {
     const user = await userModel.findByEmail(email);
@@ -175,15 +178,27 @@ Testing:
 Send in Postman under the "Body" section
 {
     "sequenceType": "Max72",
-    "sequences": [{
-        "smoking": 0,
-        "sunExposure": 0,
-        "multiplier": 1
-    }]
+    "sequences": [
+        {
+            "smoking": 1,
+            "sunExposure": 1,
+            "bmi": 22,
+            "bmiFunc": "Constant",
+            "multiplier": 0,
+            "images": [
+                {
+                    "Filename": "sokka_75.jpeg",
+                    "Age": 75,
+                    "Id": 6
+                }
+            ]
+        }
+    ]
 }
 
 This is the "Aging Request Representation" that this method needs
 *******************************************************************************/
+
 export const aging = async (req, res, next) => {
   try {
     const connectedToApiResult = connectedToApi();
@@ -195,6 +210,69 @@ export const aging = async (req, res, next) => {
       const response = await checkDBForMatch(docID, email);
       const found = response["foundStatus"];
       const agingDoc = await agingDocModel.findById(docID);
+      const imageID = agingDoc.originalImage;
+
+      // SQS Interaction
+      var AWS = require('aws-sdk');
+
+      AWS.config.update({region: 'us-east-2'});
+
+      var sqs = new AWS.SQS({apiVersion: '2020-12-01'});
+      
+      // Store sequence into RDS
+      const sequences = req.body["sequences"];
+
+      for (var item in sequences) {
+        var newSeq = {'smoking': sequences[item]["smoking"], 'sunExposure': sequences[item]["sunExposure"], 'bmi': sequences[item]["bmi"], 'bmiFunc': sequences[item]["bmiFunc"], 'multiplier': sequences[item]["multiplier"]}
+        console.log(newSeq);
+        // const _ = await agingSeqModel.create(newSeq)
+      }
+
+      // Grab image from RDS
+
+      var sql = 'SELECT image.* FROM image WHERE id = ?';
+        const result2 = await db.raw(sql, [imageID]).then((sqlResults) => {
+          return(objectToCamelCase(sqlResults[0][0]));
+        });
+
+      const imageURI = result2.uri.split("/");
+      const imageName = imageURI[imageURI.length - 1]
+
+      const agingInfo = 
+      {
+        "Document":
+          {
+            "Name": agingDoc.name,
+            "Age": agingDoc.age,
+            "Gender": agingDoc.gender,
+            "Ethnicity": agingDoc.ethnicity,
+            "Filename": imageName,
+            "Height": agingDoc.height,
+            "Weight": agingDoc.weight,
+            "Measurement": 0,
+            "Status": agingDoc.status,
+            "Id": agingDoc.id,
+            "IsSample": agingDoc.isSample,
+            "Image": {
+              "Filename": imageName,
+              "Age": agingDoc.age,
+              "Id": imageID
+            }
+          },
+          
+        "Sequences": req.body["sequences"],
+        "Status": "NOT_DONE",
+        "SequenceType": req.body["sequenceType"],
+        "Id": "1"
+      }
+
+      const stringDocs = JSON.stringify(agingInfo);
+
+      var params = {
+        DelaySeconds: 3,
+        MessageBody: stringDocs,
+        QueueUrl: "https://sqs.us-east-2.amazonaws.com/726994880768/AprilEngine-RequestQueue"
+      }
 
       if (agingDoc == undefined) {
           res.status(404).send("Error 404: Aging Document not found.")
@@ -203,8 +281,13 @@ export const aging = async (req, res, next) => {
           res.status(403).send("Error 403: Document does not belong to user.")
       }
       else {
-        console.log("Aging request successfuly sent to AprilAge")
-        console.log(req.body) // You send an Aging Request Representation in JSON (sequence types) to AprilAge
+        sqs.sendMessage(params, function(err, data) {
+          if (err) {
+            console.log("Error", err);
+          } else {
+            console.log("Success", data.MessageId);
+          }
+        });
         return res.status(202).end();
       }
     }
