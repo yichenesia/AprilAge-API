@@ -224,10 +224,10 @@ export const aging = async (req, res, next) => {
 
       for (var item in sequences) {
         var newSeq = {'smoking': sequences[item]["smoking"], 'sunExposure': sequences[item]["sunExposure"], 'bmi': sequences[item]["bmi"], 'bmiFunc': sequences[item]["bmiFunc"], 'multiplier': sequences[item]["multiplier"]}
-        console.log(newSeq);
-        // const _ = await agingSeqModel.create(newSeq)
-      }
 
+        const _ = await agingSeqModel.create(newSeq)
+      }
+      
       // Grab image from RDS
 
       var sql = 'SELECT image.* FROM image WHERE id = ?';
