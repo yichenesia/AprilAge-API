@@ -102,7 +102,7 @@ export const createAgingDoc = async (req, res, next) => {
 
     const allowed_status = ['uploaded',	'aging_pending', 'aging_complete', 'aging_failed'];
     const allowed_gender = ['male', 'female'];
-    const allowed_ethnicity = ['Caucasian', 'Asian', 'African', 'Latino-Hispanic', 'South-Asian'];
+    const allowed_ethnicity = ['Caucasian', 'Asian', 'African', 'Hispanic', 'SouthAsian'];
     const allowed_measurement = ['metric', 'imperial'];
     
     const newDocument = {
