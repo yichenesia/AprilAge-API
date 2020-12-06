@@ -255,8 +255,6 @@ export const aging = async (req, res, next) => {
         });
 
         sequenceIDs.push(result['max(id)']);
-
-        console.log(sequences[item])
       }
 
       var i;
@@ -264,6 +262,9 @@ export const aging = async (req, res, next) => {
       for (i = 0; i < sequenceIDs.length; i++) {
         sequences[i]["Id"] = sequenceIDs[i];
       }
+
+      var isSampleBool;
+      agingDoc.isSample ? isSampleBool = true : isSampleBool = false;
 
       const agingInfo = 
       {
@@ -276,10 +277,10 @@ export const aging = async (req, res, next) => {
             "Filename": imageName,
             "Height": agingDoc.height,
             "Weight": agingDoc.weight,
-            "Measurement": 0,
+            "Measurement": agingDoc.Measurement,
             "Status": agingDoc.status,
             "Id": agingDoc.id,
-            "IsSample": agingDoc.isSample,
+            "IsSample": isSampleBool,
             "Image": {
               "Filename": imageName,
               "Age": agingDoc.age,
@@ -293,6 +294,8 @@ export const aging = async (req, res, next) => {
         "Id": "1"
       }
       const stringDocs = JSON.stringify(agingInfo);
+
+      console.log(stringDocs);
 
       var params = {
         DelaySeconds: 3,
