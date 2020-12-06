@@ -67,10 +67,10 @@ const AgedImage = {
       agedImageObj.uri
     ];
 
-    if ((agedImageObj.age) && (agedImageObj.age.length > 0)) {
+    if ((agedImageObj.age) && (agedImageObj.age > 0)) {
         fields.push('age');
         values.push('?');
-        userInsertSqlParams.push(agedImageObj.age);
+        agedImageInsertSqlParams.push(agedImageObj.age);
     }
 
     const agedImageInsertSql = 'INSERT INTO agedImage (' + fields + ') VALUES(' + values + ')';

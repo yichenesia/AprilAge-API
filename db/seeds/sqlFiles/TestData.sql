@@ -21,9 +21,9 @@ VALUES
 ('1', '1', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
 
 -- Add Test Aging Sequence
-INSERT INTO agingSequence (id, created_at, updated_at)
+INSERT INTO agingSequence (id, age, created_at, updated_at)
 VALUES
-('1', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
+('1', '75', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
 
 -- Add Test Aging Result
 INSERT INTO agingResult (id, sequenceType, sequenceID, agingDocument, created_at, updated_at)
