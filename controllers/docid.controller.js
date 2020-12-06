@@ -224,6 +224,7 @@ export const aging = async (req, res, next) => {
         return(objectToCamelCase(sqlResults[0][0]));
       });
 
+      // Get image name
       const imageURI = result2.uri.split("/");
       const imageName = imageURI[imageURI.length - 1]
 
@@ -233,8 +234,20 @@ export const aging = async (req, res, next) => {
       const sequenceIDs = [];
 
       for (var item in sequences) {
-        var newSeq = {'smoking': sequences[item]["smoking"].toString(), 'sunExposure': sequences[item]["sunExposure"].toString(), 'bmi': sequences[item]["bmi"].toString(), 'bmiFunc': sequences[item]["bmiFunc"].toString(), 'multiplier': sequences[item]["multiplier"].toString()}
+        var newSeq = {'smoking': sequences[item]["smoking"].toString(), 'sunExposure': sequences[item]["sunExposure"].toString(), 'bmi': sequences[item]["bmi"].toString(), 'bmiFunc': sequences[item]["bmiFunc"].toString(), 'multiplier': sequences[item]["multiplier"].toString(), 'age': sequences[item]["age"].toString()}
         const _ = await agingSeqModel.create(newSeq)
+
+        sequences[item]["images"] = [];
+        const agedImg = {}
+
+        const splitName = imageName.split(".");
+        const agedImageName = splitName[0].concat("_".concat(sequences[item]["age"])).concat(".".concat(splitName[1]));
+
+        agedImg["Filename"] = agedImageName;
+        agedImg["Age"] = sequences[item]["age"];
+        agedImg["Id"] = imageID;
+
+        sequences[item]["images"].push(agedImg);
 
         var sql = 'SELECT MAX(ID) FROM agingSequence';
         const result = await db.raw(sql, []).then((sqlResults) => {
@@ -242,6 +255,8 @@ export const aging = async (req, res, next) => {
         });
 
         sequenceIDs.push(result['max(id)']);
+
+        console.log(sequences[item])
       }
 
       var i;
