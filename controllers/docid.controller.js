@@ -219,23 +219,36 @@ export const aging = async (req, res, next) => {
 
       var sqs = new AWS.SQS({apiVersion: '2020-12-01'});
       
+      var sql = 'SELECT image.* FROM image WHERE id = ?';
+      const result2 = await db.raw(sql, [imageID]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0][0]));
+      });
+
+      const imageURI = result2.uri.split("/");
+      const imageName = imageURI[imageURI.length - 1]
+
       // Store sequence into RDS
       const sequences = req.body["sequences"];
+
+      const sequenceIDs = [];
 
       for (var item in sequences) {
         var newSeq = {'smoking': sequences[item]["smoking"].toString(), 'sunExposure': sequences[item]["sunExposure"].toString(), 'bmi': sequences[item]["bmi"].toString(), 'bmiFunc': sequences[item]["bmiFunc"].toString(), 'multiplier': sequences[item]["multiplier"].toString()}
         const _ = await agingSeqModel.create(newSeq)
-      }
-      
-      // Grab image from RDS
 
-      var sql = 'SELECT image.* FROM image WHERE id = ?';
-        const result2 = await db.raw(sql, [imageID]).then((sqlResults) => {
+        var sql = 'SELECT MAX(ID) FROM agingSequence';
+        const result = await db.raw(sql, []).then((sqlResults) => {
           return(objectToCamelCase(sqlResults[0][0]));
         });
 
-      const imageURI = result2.uri.split("/");
-      const imageName = imageURI[imageURI.length - 1]
+        sequenceIDs.push(result['max(id)']);
+      }
+
+      var i;
+
+      for (i = 0; i < sequenceIDs.length; i++) {
+        sequences[i]["Id"] = sequenceIDs[i];
+      }
 
       const agingInfo = 
       {
@@ -259,12 +272,11 @@ export const aging = async (req, res, next) => {
             }
           },
           
-        "Sequences": req.body["sequences"],
+        "Sequences": sequences,
         "Status": "NOT_DONE",
         "SequenceType": req.body["sequenceType"],
         "Id": "1"
       }
-
       const stringDocs = JSON.stringify(agingInfo);
 
       var params = {
