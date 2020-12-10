@@ -205,11 +205,11 @@ const AgingDocument = {
     });
   },
 
-  /*updateById: (imageId, imageObj) => {
+  updateById: (docId, docObj) => {
     return db.transaction((trx) => {
-      return db('image').transacting(trx).update(imageObj).where('id',imageId)
+      return db('agingDocument').transacting(trx).update(docObj).where('id',docId)
         .then((results) => {
-          return Image.findById(imageId, trx);
+          return AgingDocument.findById(docId, trx);
         })
         .then((results) => {
           return Promise.all([Promise.resolve(results),trx.commit(results)]);
@@ -223,7 +223,7 @@ const AgingDocument = {
     }).then((results) => {
       return results;
     });
-  }*/
+  }
 };
 
 export default AgingDocument;
