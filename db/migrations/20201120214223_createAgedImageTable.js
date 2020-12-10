@@ -4,8 +4,8 @@ exports.up = function(knex, Promise) {
     (  
         \`id\` INT NOT NULL AUTO_INCREMENT,
 	    \`resultID\` INT, 
-        \`uri\` VARCHAR(255),
-	    \`age\` INT,
+        \`uri\` VARCHAR(255) NOT NULL,
+	    \`age\` INT NOT NULL,
         \`created_at\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
         \`updated_at\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (\`id\`),

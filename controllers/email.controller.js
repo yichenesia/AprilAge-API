@@ -1,11 +1,11 @@
 'use strict';
 
-import db from '../services/db.js';
-import _ from 'lodash';
-import { objectToCamelCase } from '../models/base.model.js';
-
 import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
+
 import userModel from "../models/user.model.js";
+import agingDocModel from "../models/agingDocument.model.js";
+import config from "../config/config.js";
+
 
 /*******************************************************************************
 GET /users/:email/userInfo
@@ -24,16 +24,10 @@ export const retrieveUserInfo = async (req, res, next) => {
         return;
       }
       
-      const userid = user.id;
-
-      const sql = 'SELECT COUNT(*) numAgingResults FROM agingDocument, agingResult WHERE agingDocument.id = agingResult.agingDocument AND agingDocument.userID = ?';
-
-      const result = await db.raw(sql, [userid]).then((sqlResults) => {
-        return(objectToCamelCase(sqlResults[0][0]));
-      });
+      const result = await agingDocModel.findNumAgings(user.id);
 
       return res.json({
-        uri: "http://ageme.com/AprilAPI/users/" + email,
+        uri: config.domain + "/" + email,
         email: email,
         tokens: 0,
         numAgingResults: result.numAgingResults,
