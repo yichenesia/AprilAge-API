@@ -9,7 +9,7 @@ const routes = (router) => {
   router.route('/users/reset')
     .put(users.createResetKey);
   router.route('/login')
-    .post([],users.logUserIn);
+    .post(users.logUserIn);
   router.route('/refreshAuth')
     .post([refreshPassportAuth], users.refreshAuth);
 };

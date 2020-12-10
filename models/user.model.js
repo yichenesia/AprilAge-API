@@ -74,7 +74,7 @@ const User = {
       userInsertSqlParams.push(userObj.firstName);
     }
     if ((userObj.lastName) && (userObj.lastName.length > 0)) {
-      fields.push('lastName');
+      fields.push('last_name');
       values.push('?');
       userInsertSqlParams.push(userObj.lastName);
     }
