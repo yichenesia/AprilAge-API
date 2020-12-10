@@ -14,12 +14,11 @@ const routes = (router) => {
     .get(passportAuth, noCache, users.me);
   router.route('/users/:userId')
     .put(passportAuth, users.update);
-  router.route('/createuser')
+  router.route('/users')
     .post([users.createValidation], users.create);
-
   router.route('/users')
     .get(passportAuth, users.users);
-  router.route('/userinfo')
+  router.route('/users/userinfo')
     .get(passportAuth, users.user_info);
 };
 
