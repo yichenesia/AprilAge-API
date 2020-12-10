@@ -49,7 +49,7 @@ export const createAgingDoc = async (req, res, next) => {
     const imageUri = req.body.imageUri;
     // Aging Document Representation
     const agingDoc = req.body.document;
-    const status = agingDoc.status;
+    // const status = agingDoc.status;
     const isSample = agingDoc.isSample;
     const name = agingDoc.name;
     const gender = agingDoc.gender;
@@ -60,7 +60,7 @@ export const createAgingDoc = async (req, res, next) => {
     const measurement = agingDoc.measurement;
     const bounds = agingDoc.bounds;
 
-    const allowed_status = ['uploaded',	'aging_pending', 'aging_complete', 'aging_failed'];
+    // const allowed_status = ['uploaded',	'aging_pending', 'aging_complete', 'aging_failed'];
     const allowed_gender = ['male', 'female'];
     const allowed_ethnicity = ['Caucasian', 'Asian', 'African', 'Hispanic', 'SouthAsian'];
     const allowed_measurement = ['metric', 'imperial'];
@@ -86,13 +86,13 @@ export const createAgingDoc = async (req, res, next) => {
       res.send('Missing sample image');
       return;
     }
-    if (allowed_status.includes(status)) {
-      newDocument.status = status
-    } else {
-      res.status(400);
-      res.send('Invalid input for status');
-      return;
-    }
+    // if (allowed_status.includes(status)) {
+    newDocument.status = 'uploaded';
+    // } else {
+    //  res.status(400);
+    //  res.send('Invalid input for status');
+    //  return;
+    // }
     if (typeof isSample == "boolean") {
       isSample ? newDocument.isSample = 1 : newDocument.isSample = 0;
     } else {

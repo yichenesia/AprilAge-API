@@ -295,8 +295,6 @@ export const aging = async (req, res, next) => {
       }
       const stringDocs = JSON.stringify(agingInfo);
 
-      console.log(stringDocs);
-
       var params = {
         DelaySeconds: 3,
         MessageBody: stringDocs,
@@ -317,6 +315,7 @@ export const aging = async (req, res, next) => {
             console.log("Success", data.MessageId);
           }
         });
+        const _ = await agingDocModel.updateById(docID, {'status': 'aging_pending'});
         return res.status(202).end();
       }
     }

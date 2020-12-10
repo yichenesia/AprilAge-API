@@ -39,10 +39,12 @@ const checkMessages = async () => {
         const message = JSON.parse(data.Messages[0].Body)
 
         if (message.success != true) {
+          const failed = await agingDocModel.updateById(parseInt(message.doc_id), {'status': 'aging_failed'});
           console.log("Aging failed");
         }
         else {
           // save aging results to agingResults
+          const success = await agingDocModel.updateById(parseInt(message.doc_id), {'status': 'aging_complete'});
           const newResult = {
             'agingDocument': parseInt(message.doc_id),
             'sequenceID': parseInt(message.sequence_ids) // currently only supports 1 sequence id
