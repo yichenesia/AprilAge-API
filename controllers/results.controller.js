@@ -6,6 +6,8 @@ import AgingDocument from '../models/agingDocument.model.js';
 import agedImage from '../models/agedImage.model.js';
 import agingSequence from '../models/agingSequence.model.js';
 import user from "../models/user2.model.js"; 
+import db from '../services/db.js';
+import { objectToCamelCase } from '../models/base.model.js';
 
 //GET Aging Results for an Aging Document
 export const getResults = async (req, res, next) => {
@@ -29,41 +31,55 @@ export const getResults = async (req, res, next) => {
       }
 
       const results = await resultModel.findByDOCId(req.params.docID);
-      if (results == undefined) {
-        res.status(404);
-        res.send("Aging result not found");
-        return;
-      }
 
-      const id = results.id;
+      // Find the number of results for this document
+      var sql = 'SELECT count(id) as num from agingResult WHERE agingResult.agingDocument =' + String(req.params.docID);
+        const result = await db.raw(sql, []).then((sqlResults) => {
+          return(objectToCamelCase(sqlResults[0][0]));
+        });
 
-      const img = await agedImage.findByResultID(id);
-      if (img == undefined) {
-        res.status(404);
-        res.send("Aged image not found");
-        return;
-      }
+      var arrResults = [];
+      var i;
+      for (i = 0; i< parseInt(result.num); i++) {
+
+        if (results[i] == undefined) {
+          res.status(404);
+          res.send("Aging result not found");
+          return;
+        }
+
+        const id = results[i].id;
+        console.log(id);
+
+        const img = await agedImage.findByResultID(id);
+        if (img == undefined) {
+          res.status(404);
+          res.send("Aged image not found");
+          return;
+        }
       
-      const uri = img.uri;
-      const status = doc.status;
-      const sequenceType = results.sequenceType;
-      const sequenceID = results.sequenceId;
-      
-      const sequences = await agingSequence.findById(sequenceID);
-      if (sequences == undefined) {
-        res.status(404);
-        res.send("Aging sequence not found");
-        return;
-      }
+        const uri = img.uri;
+        const status = doc.status;
+        const sequenceType = results[i].sequenceType;
+        const sequenceID = results[i].sequenceID;
+        console.log(sequenceID);
+        const sequences = await agingSequence.findById(sequenceID);
 
-      const obj = {
-        uri: uri,
-        status:status,
-        sequenceType: sequenceType,
-        sequences: sequences
+        if (sequences == undefined) {
+          res.status(404);
+          res.send("Aging sequence not found");
+          return;
+        }
+
+        const obj = {
+          uri: uri,
+          status:status,
+          sequenceType: sequenceType,
+          sequences: sequences
+        }
+        arrResults.push(obj);
       }
-      //return res.json({results});
-      return res.json(obj);
+      return res.json(arrResults);
     }
   } catch(err) {
     next(err);
