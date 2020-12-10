@@ -16,14 +16,14 @@ VALUES
 ('1', 's3://uoft-terraform.ollon.ca/sokka.jpg', '2020-11-21 20:20:14', '2020-11-21 20:20:14');
 
 -- Add Test Aging Document
-INSERT INTO agingDocument (id, userID, created_at, updated_at)
+INSERT INTO agingDocument (id, userID, status, isSample, originalImage, gender, name, age, ethnicity, created_at, updated_at)
 VALUES
-('1', '1', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
+('1', '1', 'aging_pending', '0', '1', 'male', 'Josh', 19, 'Asian','2020-11-20 20:20:14', '2020-11-20 20:20:14');
 
 -- Add Test Aging Sequence
-INSERT INTO agingSequence (id, age, created_at, updated_at)
+INSERT INTO agingSequence (id, age, smoking, sunExposure, bmifunc, multiplier, created_at, updated_at)
 VALUES
-('1', '75', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
+('1', '75', '0.0', '0.0', 'linear', '1.0', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
 
 -- Add Test Aging Result
 INSERT INTO agingResult (id, sequenceType, sequenceID, agingDocument, created_at, updated_at)
@@ -31,6 +31,6 @@ VALUES
 ('1', 'Max72', '1', '1', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
 
 -- Add Test Aged Image
-INSERT INTO agedImage (id, created_at, updated_at)
+INSERT INTO agedImage (id, uri, age, created_at, updated_at)
 VALUES
-('1', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
+('1', 's3://uoft-terraform.ollon.ca/sokka.jpg', '19', '2020-11-20 20:20:14', '2020-11-20 20:20:14');
