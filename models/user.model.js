@@ -7,6 +7,15 @@ import _ from 'lodash';
 import { objectToCamelCase } from './base.model.js';
 
 const User = {
+  getUsers: (cn = db) => {
+
+    const sql = 'SELECT email FROM users';
+
+    return db.raw(sql, []).then((sqlResults) => {
+      return(objectToCamelCase(sqlResults[0]));
+    });
+  },
+
   findById: (id, cn = db) => {
     if ((!id) || (id.length === 0)) {
       return Promise.reject(new Error('findById() No id specified!'));
@@ -24,10 +33,10 @@ const User = {
       return Promise.reject(new Error('findUserByEmail() No email specified!'));
     }
 
-    const userSql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
+    const sql = 'SELECT users.* FROM users WHERE email = ? LIMIT 1';
 
-    return cn.raw(userSql, [email]).then((userSqlResults) => {
-      return(objectToCamelCase(userSqlResults[0][0]));
+    return cn.raw(sql, [email]).then((sqlResults) => {
+      return(objectToCamelCase(sqlResults[0][0]));
     });
   },
 
@@ -36,8 +45,8 @@ const User = {
       return Promise.reject(new Error('deleteById() No id specified!'));
     }
 
-    const userDeleteSql = 'DELETE FROM users WHERE id = ?';
-    return cn.raw(userDeleteSql, [id]);
+    const deleteSql = 'DELETE FROM users WHERE id = ?';
+    return cn.raw(deleteSql, [id]);
   },
 
   deleteByEmail: (email, cn) => {
@@ -45,14 +54,15 @@ const User = {
       return Promise.reject(new Error('deleteByEmail() No email specified!'));
     }
 
-    const userSql = 'DELETE FROM users WHERE email = ?';
-    return db.raw(userSql, [email]);
+    const sql = 'DELETE FROM users WHERE email = ?';
+    return db.raw(sql, [email]);
   },
 
   create: (userObj, cn = db) => {
     const fields = ['email', 'hashed_password', 'salt'];
     const values = ['?', '?', '?'];
     const userInsertSqlParams = [
+      //userObj.role
       userObj.email,
       userObj.hashedPassword,
       userObj.salt,

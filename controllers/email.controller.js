@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { objectToCamelCase } from '../models/base.model.js';
 
 import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
-import userModel from "../models/user2.model.js";
+import userModel from "../models/user.model.js";
 
 /*******************************************************************************
 GET /users/:email/userInfo

@@ -14,8 +14,13 @@ const routes = (router) => {
     .get(passportAuth, noCache, users.me);
   router.route('/users/:userId')
     .put(passportAuth, users.update);
-  router.route('/users')
+  router.route('/createuser')
     .post([users.createValidation], users.create);
+
+  router.route('/users')
+    .get(passportAuth, users.users);
+  router.route('/userinfo')
+    .get(passportAuth, users.user_info);
 };
 
 export default routes;

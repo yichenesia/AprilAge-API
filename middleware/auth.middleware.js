@@ -3,6 +3,7 @@ import passport from 'passport';
 import { Roles } from '../config/constants.js';
 
 /// Check Admin
+console.log("fgdhgj");
 export const passportAuth = passport.authenticate('bearer', { session:false });
 export const refreshPassportAuth = passport.authenticate('refresh-bearer', { session:false });
 

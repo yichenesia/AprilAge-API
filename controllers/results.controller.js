@@ -5,7 +5,7 @@ import resultModel from "../models/agingResult.model.js";
 import AgingDocument from '../models/agingDocument.model.js';
 import agedImage from '../models/agedImage.model.js';
 import agingSequence from '../models/agingSequence.model.js';
-import user from "../models/user2.model.js"; 
+import user from "../models/user.model.js"; 
 
 //GET Aging Results for an Aging Document
 export const getResults = async (req, res, next) => {
