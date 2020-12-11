@@ -16,6 +16,10 @@ const routes = (router) => {
     .put(passportAuth, users.update);
   router.route('/users')
     .post([users.createValidation], users.create);
+  router.route('/users')
+    .get(passportAuth, users.users);
+  router.route('/users/userinfo')
+    .get(passportAuth, users.user_info);
 };
 
 export default routes;

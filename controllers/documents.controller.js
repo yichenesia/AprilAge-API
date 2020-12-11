@@ -1,6 +1,6 @@
 'use strict';
 
-import userModel from '../models/user2.model.js'
+import userModel from '../models/user.model.js'
 import agingDocModel from '../models/agingDocument.model.js'
 import imageModel from '../models/images.model.js'
 
