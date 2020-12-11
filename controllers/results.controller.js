@@ -1,6 +1,6 @@
 'use strict';
 
-import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js'; // change model later
+import { connectedToApi, connectedToDatabase } from '../models/status.model.js'; // change model later
 import resultModel from "../models/agingResult.model.js"; 
 import AgingDocument from '../models/agingDocument.model.js';
 import agedImage from '../models/agedImage.model.js';

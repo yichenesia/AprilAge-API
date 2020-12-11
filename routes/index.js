@@ -5,7 +5,7 @@ import express  from 'express';
 import * as controllers from '../controllers/index.js';
 import { passportAuth } from '../middleware/auth.middleware.js';
 
-import healthCheckRoutes from './healthCheck.routes.js'; 
+import statusRoutes from './status.routes.js'; 
 import userRoutes from './user.routes.js'; 
 import authRoutes from './auth.routes.js'; 
 import entryRoutes from './entry.routes.js'; 
@@ -32,7 +32,7 @@ const router = express.Router();
 router.route('/')
   .all(passportAuth, controllers.index);
 
-healthCheckRoutes(router);
+statusRoutes(router);
 user2Routes(router);
 authRoutes(router);
 userRoutes(router);

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { objectToCamelCase } from '../models/base.model.js';
 import userModel from '../models/user2.model.js'
 import agingDocModel from '../models/agingDocument.model.js';
-import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
+import { connectedToApi, connectedToDatabase } from '../models/status.model.js';
 
 
 export const checkDBForMatch = async (docID, email) => {
