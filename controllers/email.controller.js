@@ -1,11 +1,10 @@
 'use strict';
 
-import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
-
+import _ from 'lodash';
+import { connectedToApi, connectedToDatabase } from '../models/status.model.js';
 import userModel from "../models/user.model.js";
 import agingDocModel from "../models/agingDocument.model.js";
 import config from "../config/config.js";
-
 
 /*******************************************************************************
 GET /users/:email/userInfo

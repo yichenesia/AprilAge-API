@@ -73,6 +73,8 @@ const runApp = (app) => {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
+    res.status(404); 
+    res.send(err.message);
   });
 
   // 500 - Internal Server Error

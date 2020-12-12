@@ -3,7 +3,7 @@
 import {
   connectedToApi,
   connectedToDatabase,
-} from "../models/healthCheck.model.js";
+} from "../models/status.model.js";
 import imageModel from "../models/images.model.js";
 import { createRequire } from "module";
 
