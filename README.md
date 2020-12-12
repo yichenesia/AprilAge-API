@@ -1,6 +1,12 @@
 # Team 14: Ollon
 
-NOTE: This readme is copied over from our d2 repo and is not accurate. It will be updated in the coming days.
+NOTE: This readme is copied over from our d2 repo and not all details are accurate. It will be updated in the coming days.
+
+## Video
+
+Our D4 demo video can be viewed at the following link: 
+https://www.youtube.com/watch?v=jQ3irI9iFBI&feature=youtu.be
+
 
 ## Description
 
