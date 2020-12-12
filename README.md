@@ -1,5 +1,7 @@
 # Team 14: Ollon
 
+NOTE: This readme is copied over from our d2 repo and is not accurate. It will be updated in the coming days.
+
 ## Description
 
 This RESTful API is a minimum-viable-product (MVP) of the AprilAge Web API proposed by Ollon. 
@@ -30,8 +32,8 @@ One also has the option of deleting a specific aging document given a docID and 
 ### Installation
 Using Git Bash, clone this repository:
 ```bash
-git clone https://github.com/csc301-fall-2020/team-project-14-ollon.git
-cd team-project-14-ollon
+git clone https://github.com/csc301-fall-2020/team-project-14-ollon-d4.git
+cd team-project-14-ollon-d4
 ```
  
 ### Usage
