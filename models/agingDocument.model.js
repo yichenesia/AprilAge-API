@@ -17,6 +17,112 @@ const AgingDocument = {
     });
   },
 
+  findWithFilter: (id, filters, cn = db) => {
+    if ((!id) || (id.length === 0)) {
+      return Promise.reject(new Error('findWithFilter() No id specified!'));
+    }
+
+    if (filters.filter && filters.orderBy) {
+      const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userid = ? AND ?? ' + filters.filter.operator + ' ? ORDER BY ??';
+      var params = [
+        id,
+        filters.filter.field,
+        filters.filter.value,
+        filters.orderBy
+      ];
+      return cn.raw(sql, params).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+    else if (filters.filter) {
+      const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userid = ? AND ?? ' + filters.filter.operator + ' ?';
+      var params = [
+        id,
+        filters.filter.field,
+        filters.filter.value
+      ];
+      return cn.raw(sql, params).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+    else if (filters.orderBy) {
+      const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userid = ? ORDER BY ??';
+      var params = [
+        id,
+        filters.orderBy
+      ];
+      return cn.raw(sql, params).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+    else {
+      const sql = 'SELECT agingDocument.* FROM agingDocument WHERE userid = ?';
+      return cn.raw(sql, [id]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+  },
+
+  findAgings: (id, filters, cn = db) => {
+    if ((!id) || (id.length === 0)) {
+      return Promise.reject(new Error('findAgings() No id specified!'));
+    }
+
+    if (filters.filter && filters.orderBy) {
+      const sql = 'SELECT agingResult.id, status, sequenceType, sequenceID, agingDocument FROM agingDocument, agingResult WHERE agingDocument.id = agingResult.agingDocument AND agingDocument.userID = ? \
+      AND ?? ' + filters.filter.operator + ' ? ORDER BY ??';
+      var params = [
+        id,
+        filters.filter.field,
+        filters.filter.value,
+        filters.orderBy
+      ];
+      return cn.raw(sql, params).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+    else if (filters.filter) {
+      const sql = 'SELECT agingResult.id, status, sequenceType, sequenceID, agingDocument FROM agingDocument, agingResult WHERE agingDocument.id = agingResult.agingDocument AND agingDocument.userID = ? \
+      AND ?? ' + filters.filter.operator + ' ?';
+      var params = [
+        id,
+        filters.filter.field,
+        filters.filter.value
+      ];
+      return cn.raw(sql, params).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+    else if (filters.orderBy) {
+      const sql = 'SELECT agingResult.id, status, sequenceType, sequenceID, agingDocument FROM agingDocument, agingResult WHERE agingDocument.id = agingResult.agingDocument AND agingDocument.userID = ? ORDER BY ??';
+      var params = [
+        id,
+        filters.orderBy
+      ];
+      return cn.raw(sql, params).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+    else {
+      const sql = 'SELECT agingResult.id, status, sequenceType, sequenceID, agingDocument FROM agingDocument, agingResult WHERE agingDocument.id = agingResult.agingDocument AND agingDocument.userID = ?';
+      return cn.raw(sql, [id]).then((sqlResults) => {
+        return(objectToCamelCase(sqlResults[0]));
+      });
+    }
+  },
+
+  findNumAgings: (id, cn = db) => {
+    if ((!id) || (id.length === 0)) {
+      return Promise.reject(new Error('findById() No id specified!'));
+    }
+
+    const sql = 'SELECT COUNT(*) numAgingResults FROM agingDocument, agingResult WHERE agingDocument.id = agingResult.agingDocument AND agingDocument.userID = ?';
+
+    return cn.raw(sql, [id]).then((sqlResults) => {
+      return(objectToCamelCase(sqlResults[0][0]));
+    });
+  },
+
   deleteById: (id, cn = db) => {
     if ((!id) || (id.length === 0)) {
       return Promise.reject(new Error('deleteById() No id specified!'));
@@ -99,11 +205,11 @@ const AgingDocument = {
     });
   },
 
-  /*updateById: (imageId, imageObj) => {
+  updateById: (docId, docObj) => {
     return db.transaction((trx) => {
-      return db('image').transacting(trx).update(imageObj).where('id',imageId)
+      return db('agingDocument').transacting(trx).update(docObj).where('id',docId)
         .then((results) => {
-          return Image.findById(imageId, trx);
+          return AgingDocument.findById(docId, trx);
         })
         .then((results) => {
           return Promise.all([Promise.resolve(results),trx.commit(results)]);
@@ -117,7 +223,7 @@ const AgingDocument = {
     }).then((results) => {
       return results;
     });
-  }*/
+  }
 };
 
 export default AgingDocument;

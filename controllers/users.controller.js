@@ -10,6 +10,9 @@ import { isInvalidValue, isValidValue, validate } from '../utils/validation.util
 import expressValidator from 'express-validator';
 import { objectToSnakeCase } from '../models/base.model.js';
 
+import db from '../services/db.js';
+import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
+
 const { check, param, body } = expressValidator;
 
 /**
@@ -262,4 +265,66 @@ export const updatePassword = async (req, res, next) => {
   } catch(err) {
     next(err);
   };
+};
+
+
+
+/*******************************************************************************
+GET /users
+Gets the email and id of all users in the database
+*******************************************************************************/
+export const users = async (req, res, next) => {
+  try {
+    const connectedToApiResult = connectedToApi();
+    const connectedToDatabaseResult = await connectedToDatabase();
+    
+    if (connectedToApiResult && connectedToDatabaseResult) {
+
+      const users_list = await userModel.getUsers();
+
+      return res.json({
+        users: users_list
+      });
+    }
+    else{
+      //Error message for when the api or database connection isn't working
+      res.status(500).send("Error 500: Internal Error");
+    }
+  }
+  catch(err) {
+    next(err);
+  }
+};
+
+/*******************************************************************************
+GET /user_info
+Gets all user info of the user that matches the inputted email
+*******************************************************************************/
+export const user_info = async (req, res, next) => {
+  try {
+    const connectedToApiResult = connectedToApi();
+    const connectedToDatabaseResult = await connectedToDatabase();
+    const email = req.body.email;
+    const user = await userModel.findByEmail(email);
+    
+    if (!user) {
+      res.status(404).send('Error 404: User not found');
+      return;
+    }
+    else if (connectedToApiResult && connectedToDatabaseResult) {
+
+        return res.json({ 
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        });
+    }
+    else{
+      //Error message for when the api or database connection isn't working
+      res.status(500).send("Error 500: Internal Error");
+    }
+  } 
+  catch(err) {
+    next(err);
+  }
 };

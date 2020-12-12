@@ -14,6 +14,7 @@ import  routes from './routes/index.js';
 import  * as cacheService from './services/cache.service.js';
 import  * as jwtService from './services/jwt.service.js';
 import  logger from './services/logger.service.js';
+import sqsMonitor from './services/sqsMonitor.js';
 import configPassport from './config/passport.js';
 
 const runApp = (app) => {
@@ -117,6 +118,8 @@ const runApp = (app) => {
   logger.info('Starting %s API Server ...', config.api.name);
   logger.info('Server Date/Time: %s', Date(Date.now()));
 
+  setInterval(() => checkMessage(sqsMonitor), 3000); //Check for messages from SQS
+
   //Setup services
   const servicesPromises = [
     cacheService.init(config.cache),
@@ -132,6 +135,10 @@ const runApp = (app) => {
       config
     }; 
   });
+};
+
+function checkMessage(sqsMonitor) {
+  sqsMonitor();
 };
 
 export default runApp;

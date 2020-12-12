@@ -3,7 +3,7 @@
 import {connectedToApi, connectedToDatabase} from "../models/status.model.js"
 import agingResult from "../models/agingResult.model.js"; 
 import agingDocument from "../models/agingDocument.model.js";
-import user from "../models/user2.model.js"; 
+import user from "../models/user.model.js"; 
 import { createRequire } from "module";
 //import { response } from "express";
 

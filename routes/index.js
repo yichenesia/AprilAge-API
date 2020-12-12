@@ -17,7 +17,6 @@ import resultsIdRoutes from './resultsid.routes.js';
 import emailRoutes from './email.routes.js';
 import imageRoutes from "./images.routes.js"; 
 import statusRoute from "./status.routes.js";
-import user2Routes from './user2.routes.js';
 
 
 /**
@@ -33,7 +32,6 @@ router.route('/')
   .all(passportAuth, controllers.index);
 
 statusRoutes(router);
-user2Routes(router);
 authRoutes(router);
 userRoutes(router);
 entryRoutes(router);

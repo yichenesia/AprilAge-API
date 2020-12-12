@@ -25,7 +25,8 @@ const AgingResult = {
     const sql = 'SELECT agingResult.* FROM agingResult WHERE id = ? and id = agingResult.agingDocument';
 
     return cn.raw(sql, [id]).then((sqlResults) => {
-      return(objectToCamelCase(sqlResults[0][0]));
+      //console.log(objectToCamelCase(sqlResults));
+      return(objectToCamelCase(sqlResults[0]));
     });
   },
 

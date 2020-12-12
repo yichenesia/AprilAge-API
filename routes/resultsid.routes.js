@@ -9,10 +9,10 @@ const noCache = connectNoCache();
 
 const routes = (router) => {
     router.route('/users/:email/documents/:docID/results/:resultID')
-    .get(resultsID.getResult);
+    .get(passportAuth, resultsID.getResult);
 
     router.route('/users/:email/documents/:docID/results/:resultID')
-    .delete(resultsID.deleteResult)
+    .delete(passportAuth, resultsID.deleteResult)
 
 }
 

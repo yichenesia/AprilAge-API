@@ -56,6 +56,11 @@ const AgingSequence = {
         values.push('?');
         agingSeqInsertSqlParams.push(agingSeqObj.multiplier);
     }
+    if ((agingSeqObj.age) && (agingSeqObj.age > 0)) {
+      fields.push('age');
+      values.push('?');
+      agingSeqInsertSqlParams.push(agingSeqObj.age);
+    }
 
     const agingSeqInsertSql = 'INSERT INTO agingSequence (' + fields + ') VALUES(' + values + ')';
 

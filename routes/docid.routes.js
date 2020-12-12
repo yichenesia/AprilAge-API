@@ -1,18 +1,19 @@
 'use strict';
 
 import * as docid from '../controllers/docid.controller.js';
+import { passportAuth } from '../middleware/auth.middleware.js';
 
 const routes = (router) => {
   router.route('/users/:email/documents/:docID')
-    .get(docid.retrieveAgingDoc);
+    .get(passportAuth, docid.retrieveAgingDoc);
   router.route('/users/:email/documents/:docID')
-    .delete(docid.removeAgingDoc);
+    .delete(passportAuth, docid.removeAgingDoc);
   router.route('/users/:email/documents/:docID/points')
-    .get(docid.points);
+    .get(passportAuth, docid.points);
   router.route('/users/:email/documents/:docID/aging')
-    .post(docid.aging);
+    .post(passportAuth, docid.aging);
   router.route('/users/:email/documents/:docID/status')
-    .get(docid.status);
+    .get(passportAuth, docid.status);
 };
 
 export default routes;
