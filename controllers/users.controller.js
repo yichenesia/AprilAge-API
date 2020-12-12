@@ -297,7 +297,7 @@ export const users = async (req, res, next) => {
 };
 
 /*******************************************************************************
-GET /user_info
+GET /users/userinfo
 Gets all user info of the user that matches the inputted email
 *******************************************************************************/
 export const user_info = async (req, res, next) => {
