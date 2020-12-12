@@ -2,6 +2,13 @@
 A starter API using Nodejs with mysql.
 
 
+# Video
+
+Our D4 video can be viewed at the following link: 
+https://www.youtube.com/watch?v=jQ3irI9iFBI&feature=youtu.be
+
+
+
 # Spinning Up Server
 
 This app uses dotenv.
@@ -140,6 +147,4 @@ Middleware for express routes
    If running on Windows, open config.js and set api*root_path to "/" and not to getEnv("API*
    ROOT_PATH") since this variable is used by Windows and the nodejs app will use the variable set by Windows and not from the env.sh
 
-# Video
-  [a relative link](301 final.mp4)
 
