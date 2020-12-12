@@ -11,7 +11,7 @@ import expressValidator from 'express-validator';
 import { objectToSnakeCase } from '../models/base.model.js';
 
 import db from '../services/db.js';
-import { connectedToApi, connectedToDatabase } from '../models/healthCheck.model.js';
+import { connectedToApi, connectedToDatabase } from '../models/status.model.js';
 
 const { check, param, body } = expressValidator;
 
