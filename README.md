@@ -1,150 +1,137 @@
-# Ollon Bedrock2020
-A starter API using Nodejs with mysql.
+# Team 14: Ollon
 
+## Description
 
-# Video
+This RESTful API is a minimum-viable-product (MVP) of the AprilAge Web API proposed by Ollon. 
 
-Our D4 video can be viewed at the following link: 
-https://www.youtube.com/watch?v=jQ3irI9iFBI&feature=youtu.be
+Prior to the development of this API, AprilAge’s application - which uses machine learning to age an individual’s face according to various factors, such as their smoking consumption, was accessible only through kiosks and desktop applications. 
 
+With the development of this web API, AprilAge’s aging engine will be made accessible for users universally and simultaneously through a web-app, and also replace the older version which was made using outdated technology. This API is meant to be a bridge between the aging engine and the future web application that allows multiple users to simultaneously experience the aging software. In other words, it will allow a future developer designing a web application to utilize the aging engines by using this API as a middleware.
 
+## Key Features
 
-# Spinning Up Server
+At the moment, we have implemented a number methods (routes) that the user can access via Postman. To summarize, one can create a new user in the API (similar to registration) by giving their email and password which is stored in an object called an aging document. 
 
-This app uses dotenv.
+They can then upload images to the AWS S3 bucket and our database to be aged (which is currently not implemented as the April Age aging engine was not provided by our partner). The user can then create an “aging sequence” by selecting a series of fields that will impact the aged image such as sun exposure, smoking, etc. 
 
-You will need to copy example.env to .env and fill with your environment's variables. Alternatively, you can use environment variables (see env.sh.example)
+Once all this information is provided the user can retrieve an aged image or an updated aging document. One can also view or delete an aging document by providing their email. They can view all their aging results (which may contain multiple sequences of aged images) for a specific aging document.
+
+One also has the option of deleting a specific aging document given a docID and a result given a resultID.
+
+## Instructions and Development Requirements
+### Requirements
+- OS: Windows 10 or MacOS 10.14+
+- [Git](https://git-scm.com/downloads)
+- Git Bash (installed with Git)
+- [npm](https://www.npmjs.com/)
+- [Postman Desktop](https://www.postman.com/)
+- (For a developer) Some kind of code compiler such as: [VS Code](https://code.visualstudio.com)
+ 
+### Installation
+Using Git Bash, clone this repository:
+```bash
+git clone https://github.com/csc301-fall-2020/team-project-14-ollon.git
+cd team-project-14-ollon
 ```
-cp example.env .env
-
+ 
+### Usage
+Set the environment source:
+```bash
+source env.sh
 ```
-
-
-Create an empty db in mysql, and add the Database info to .env
-```
-CREATE DATABASE bedrock_dev;
-
-CREATE USER 'bedrock'@'localhost' IDENTIFIED BY '<password>';
-GRANT ALL PRIVILEGES ON * . * TO 'bedrock'@'localhost';
-
-```
-
-Run migrations & seed.  Run Migrations and seeds to 
-```
-
-source .env
+Install dependencies:
+```bash
 npm install
-npm run localDeploy
-npm run localResetSeeds
-
 ```
-
-# Making new DB Migrations & Seeds
-Make migrations and seeds
-```
-npm run makeMigration migrationName
-```
-
-```
-npm run makeSeed seedName
-```
-
-
-
-# Start the application
-
-```
+ 
+Start local server:
+```bash
 npm start
+```
+Now you should be able to access our API either through Postman or your web browser of choice at: `http://localhost:3003/`.
 
+### Postman Usage
+Import [this Postman collection](https://www.getpostman.com/collections/36785b0c89b9f105ad65) to run sample test routes. To import:
+
+1. Open the **Postman** app.
+2. On the top left , click **Import** (next to + New).
+3. In the window that opens up, click **Link**.
+4. Enter the URL linked above and click **Continue**.
+5. Select **Import**.
+6. On the left-hand side, you should see a folder under the Collections tab with 16 requests. Click to expand.
+7. To test a route, click on a request and then click the blue **Send** button.
+
+For this specific route, the user must upload an actual image file.
+```
+POST /images
+ 
+Description: Upload given image to the database
+ 
+http://localhost:3003/images
+ 
+Body (form-data):
+    key: image (file)
+    Upload image file in “values” section
+Expected Response: Status 200
 ```
 
+To upload an image, go to the **Body** tab and click **Select Files** in the cell under the VALUE heading. After choosing an image file, click Send.
+ 
+#### List of Routes:
+ 
+ 
+- `GET /users`
+  - Get all users
+- `POST /create_user`
+  - Create a new user with the given params (email, first name, last name, password)
+- `GET /user_info`
+  - Get user by provided email 
+- `GET /status`
+  - A check to make sure the api is connected
+- `POST /images`
+  - Upload given image to the database
+- `GET /images/:id`
+  - Retrieve image `id` from database 
+- `GET /users/:email/documents/:docID`
+  - Retrieve agingDocument `docID`, which belongs to user `email`
+- `DELETE /users/:email/documents/:docID`
+  - Delete agingDocument `docID`, which belongs to user `email`
+- `GET /users/:email/documents/:docID/points`
+  - Returns an image with the feature points 
+- `POST /users/:email/documents/:docID/aging`
+  - Runs the aging algorithm on the image referenced by `docID`
+- `GET /users/:email/documents/:docID/status`
+  - Gets the status of a `docID`
+- `GET /users/:email/documents`
+  - Retrieves all of user `email`’s aging documents
+- `POST /users/:email/documents`
+  - Creates a new aging document for user `email` with the given parameters 
+- `GET /users/:email/documents/results`
+  - Retrieves all of user `email`’s aging results 
+- `GET /users/:email/userInfo`
+  - Retrieves user `email`’s information
+- `GET /users/:email/documents/:docID/results`
+  - Retrieves all of user `email`’s aging results related to aging document `docID`
+- `GET /users/:email/documents/:docID/results/:resultID`
+  - Retrieves result `resultID` for user `email` from aging Document `docID`
+- `GET /users/:email/documents/:docID/results/:resultID.zip`
+  - Retrieves result `resultID` for user `email` from aging Document `docID` as a zip file
+  - `/users/admin@example.com/documents/1/results/1.zip` needs to be run in browser only, not in Postman
+- `DELETE /users/:email/documents/:docID/results/:resultID`
+  - Deletes result `resultID` for user `email` from aging Document `docID`
 
+## Deployment and Git (Bitbucket) Workflow
 
-# Docker
+For this project, our partner wanted us to use their Bitbucket repositories, so we have been working there. For this deliverable, we will be mirroring this repository onto Github. While developing, we created a `dev` branch for development. We divided up the features that needed to be developed amongst ourselves and worked off a separate branch off of `dev` when developing our own code. Each feature has several routes that one person would be in charge of and the branch would be named `feature/<feature name>` accordingly. Because each feature has its own set of `controller`, `model`, and `route` files, merge conflicts were close to none. 
 
-The back end will have two docker containers which are in the same network
+When we finished, we would push to the repository and create a pull request to merge the update into `dev`. The person that made the PR would then notify the team chat and another team member would then look over the code before approving the PR and merging it into dev. The `master` branch is left alone until the deliverable is complete, at which point we will merge `dev` into `master` (i.e. before submitting D2, we will merge).
 
-##  Network
-```
-docker network create ollon-bedrock
-```
-## Database Container
-The database will live in a standed mysql conatiner.  once it is up and running the standard database  setup above need to be run on it
+Our overall deployment process is as follows: pull from `dev`, branch from `dev` with an appropriate branch name for your feature, and write your code for that feature. Test thoroughly locally (since we don’t yet have the API hosted on the cloud). Testing involved populating, accessing, and manipulating our AWS-hosted database with information. Finally, once the feature is done, a PR should be opened and another team member will look over it before approving and merging to `dev`. After everyone has merged their work to `dev` and we have thoroughly tested `dev` to make sure nothing breaks, we merge `dev` into `master`.  
 
-```
-docker run  --net ollon-bedrock --name ollon-bedrock-db  -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<password> mysql:5.7
+In the couple of days following our D2 deadline, we will be using CI/CD to deploy to AWS (we had to wait on our partner to give pipeline admin permissions, which were just granted after our demo on November 23rd). The setup file for CI/CD already exists in `bitbucket-pipelines.yml`, where you can see the name of the branch we will be using for deployment (`aws-staging`) and the prepared Lambda functions. 
 
-```
-## API Container
-The API coontaier is built with the docker file in the dirctory
-Note docker does like quotations in .env files
+## Licenses
 
-```
-docker build  -t ollon-bedrock .
+Our codebase is currently private and will be used internally by Ollon and any partners, and thus will be closed source.
 
-docker run --env-file .env --network ollon-bedrock  --name ollon-bedrock  -p 3001:3001 ollon-bedrock 
-
-```
-## Useful Docker commands
-
-Cleaning up 
-
-```
-docker rmi -f $(docker images -f "dangling=true" -q)
-
-docker rm -f  <container_name>
-
-```
-
-Running a command on a running continer
-
-```
-docker exec -it ollon-bedrock  <command>
-
-docker exec -it ollon-bedrock-db mysql -u root -p
-
-```
-
-
-# App Breakdown
-
-## App.js
-Main entrance app
-
-## Config
-in config/config.js
-Config file to use process.env.API
-
-## Routes
-routes/index.js
-routes/user.routes.js
-routes/entry.routes.js - example routes. Modify as you please.
-The http endpoints you can call
-Route to controller
-
-## Controllers
-controllers
-Handle a call
-Returns the result
-
-## Services
-services
-More detailed processes
-
-## Models
-models
-Models for objects, generally model -> db table
-
-## Middleware
-Middleware for express routes
-
-
-
-
-# TROUBLESHOOTING
-
-1. ERROR: route not found on Windows
-   If running on Windows, open config.js and set api*root_path to "/" and not to getEnv("API*
-   ROOT_PATH") since this variable is used by Windows and the nodejs app will use the variable set by Windows and not from the env.sh
-
-
+##### *** NOTE: one of our teammates made commits under the following names: Allison Li, lizhuoq2, and 1234567980 (these are all the same people)
