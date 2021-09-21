@@ -1,6 +1,4 @@
-# Team 14: Ollon
-
-NOTE: This readme is copied over from our d2 repo and not all details are accurate. It will be updated in the coming days.
+# Team 14: AprilAge (Ollon)
 
 ## Video
 
@@ -139,7 +137,3 @@ Our overall deployment process is as follows: pull from `dev`, branch from `dev`
 In the couple of days following our D2 deadline, we will be using CI/CD to deploy to AWS (we had to wait on our partner to give pipeline admin permissions, which were just granted after our demo on November 23rd). The setup file for CI/CD already exists in `bitbucket-pipelines.yml`, where you can see the name of the branch we will be using for deployment (`aws-staging`) and the prepared Lambda functions. 
 
 ## Licenses
-
-Our codebase is currently private and will be used internally by Ollon and any partners, and thus will be closed source.
-
-##### *** NOTE: one of our teammates made commits under the following names: Allison Li, lizhuoq2, and 1234567980 (these are all the same people)
